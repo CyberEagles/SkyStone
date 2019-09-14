@@ -96,6 +96,7 @@ public class AddingTimeToThings extends LinearOpMode {
     /* Take a look at what I did here, and try using it.
     Once you get the hang of it, try making and using a SpinRightTime method!
     if you want a couple tips, don't be afraid to ask!
+    :)
     */
 
 
