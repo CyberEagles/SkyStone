@@ -27,46 +27,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.vision.MasterVision;
-import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions;
-import org.firstinspires.ftc.teamcode.vision.MasterVision;
-import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions;
-import org.firstinspires.ftc.teamcode.vision.TFLite;
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 
 /**
@@ -98,9 +68,9 @@ import java.util.Locale;
 
 @Autonomous(name="Final Autonomous DEPOT2", group="Pushbot")
 
-public class FinalAutonomous2 extends LinearOpMode {
-    MasterVision vision;
-    SampleRandomizedPositions goldPosition;
+public class OdometerTesting extends LinearOpMode {
+
+
 
 
 
@@ -109,8 +79,8 @@ public class FinalAutonomous2 extends LinearOpMode {
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 0.75 ;     // This is < 1.0 if geared UP //0.75 for chassis, x for susan
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.00 ;     // This is < 1.0 if geared UP //0.75 for chassis, x for susan
     static final double     LIFT_GEAR_REDUCTION     = 2;
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     NO_WHEEL                = 0.5;
@@ -158,9 +128,7 @@ public class FinalAutonomous2 extends LinearOpMode {
         robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.dropOffMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
-        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_LEFT);
-        vision.init();// enables the camera overlay. this will take a couple of seconds
+        // Send telemetry message to indicate successful Encoder resetwx
         telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.leftBackDrive.getCurrentPosition(),
                 robot.rightBackDrive.getCurrentPosition());
@@ -170,14 +138,6 @@ public class FinalAutonomous2 extends LinearOpMode {
         waitForStart();
         telemetry.addData("keeping the phones awake","part 1");
         telemetry.update();
-        vision.enable();// enables the tracking algorithms. this might also take a little time
-        Wait();
-        Wait();
-
-        Wait();
-        vision.disable();// disables tracking algorithms. this will free up your phone's processing power for other jobs.
-        goldPosition = vision.getTfLite().getLastKnownSampleOrder();
-        telemetry.addData("goldPosition was", goldPosition);
 // put the start of every auto here
 
         // Step through each leg of the path,
@@ -192,174 +152,11 @@ public class FinalAutonomous2 extends LinearOpMode {
 
         telemetry.addData("keeping the phones awake","part 2");
         telemetry.update();
-        robot.teamMarker.setPosition(0.1);
         /**LIFT right below*/
-        nonWheelMotors(LIFT_SPEED, 6, 5);
+
         DriveBackwards(DRIVE_SPEED,3,5);
 
 
-        switch (goldPosition) { // for using things in the autonomous program
-            case LEFT:
-                /** RIGHT Code WORKING*/
-                TurnRightNew(TURN_SPEED,30,5);
-                Intake(0.2);
-                Wait500();
-                telemetry.addData("keeping the phones awake","part 3");
-                telemetry.update();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                DriveForward(DRIVE_SPEED,28,5);
-                robot.intakespin.setPower(0);
-                telemetry.addData("keeping the phones awake","part 4");
-                telemetry.update();
-                Intake(-0.6);
-                Wait500();
-                Intake(0);
-                DriveForward(DRIVE_SPEED,10,5);
-                TurnLeftNew(TURN_SPEED,18,5);
-                DriveForward(DRIVE_SPEED,24,5);
-
-                robot.teamMarker.setPosition(0.6);
-                telemetry.addData("keeping the phones awake","part 5");
-                telemetry.update();
-                TurnLeftNew(TURN_SPEED,10,5);
-                robot.teamMarker.setPosition(0.0);
-                TurnLeftNew(TURN_SPEED,1,5);
-                DriveForward(DRIVE_SPEED,65,5);
-                Intake(0.2);
-                telemetry.addData("keeping the phones awake","part 6");
-                telemetry.update();
-                Wait500();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                Wait();
-                robot.intakespin.setPower(0);
-                telemetry.addData("This is really right","IT IS RIGHT");
-                telemetry.update();
-                sleep(2000);
-
-
-                break;
-
-            case CENTER:
-                /** LEFT code WORKING */
-                 TurnRightNew(TURN_SPEED,15,5);
-                 Intake(0.2);
-                 Wait500();
-                 telemetry.addData("keeping the phones awake","part 3");
-                 telemetry.update();
-                 Intake(0);
-                 robot.intakespin.setPower(1);
-                 DriveForward(DRIVE_SPEED,28,5);
-                 robot.intakespin.setPower(0);
-                 telemetry.addData("keeping the phones awake","part 4");
-                 telemetry.update();
-                 Intake(-0.6);
-                 Wait500();
-                 Intake(0);
-                 DriveForward(DRIVE_SPEED,15,5);
-                 TurnLeftNew(TURN_SPEED,26,5);
-                 DriveBackwards(DRIVE_SPEED,24,5);
-                 TurnRightNew(TURN_SPEED,10,5);
-                 robot.teamMarker.setPosition(0.6);
-                 telemetry.addData("keeping the phones awake","part 5");
-                 telemetry.update();
-                 Wait();
-                 robot.teamMarker.setPosition(0.0);
-//                 TurnLeftNew(TURN_SPEED,3.5,5); // 5 worked at a time
-                 DriveForward(DRIVE_SPEED,80,5);
-                 Intake(0.2);
-                 telemetry.addData("keeping the phones awake","part 6");
-                 telemetry.update();
-                 Wait500();
-                 Intake(0);
-                 robot.intakespin.setPower(1);
-                 Wait();
-                 robot.intakespin.setPower(0);
-
-                telemetry.addData("This is really left","IT IS LEFT");
-                telemetry.update();
-                sleep(2000);
-                 break;
-
-            case RIGHT:
-                /** MIDDLE code SOMEWHAT WORKING*/
-                TurnRightNew(TURN_SPEED,22,5);
-                Intake(0.2);
-                Wait500();
-                telemetry.addData("keeping the phones awake","part 3");
-                telemetry.update();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                DriveForward(DRIVE_SPEED,24,5);
-                robot.intakespin.setPower(0);
-                telemetry.addData("keeping the phones awake","part 4");
-                telemetry.update();
-                Intake(-0.6);
-                Wait500();
-                Intake(0);
-                DriveForward(DRIVE_SPEED,26,5);
-                TurnLeftNew(TURN_SPEED,26,5);
-                robot.teamMarker.setPosition(0.6);
-                telemetry.addData("keeping the phones awake","part 5");
-                telemetry.update();
-                DriveForward(DRIVE_SPEED,15,5);
-                robot.teamMarker.setPosition(0.0);
-//                TurnLeftNew(TURN_SPEED,3,5);
-                DriveForward(DRIVE_SPEED,68,5);
-                Intake(0.2);
-                telemetry.addData("keeping the phones awake","part 6");
-                telemetry.update();
-                Wait500();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                Wait();
-                robot.intakespin.setPower(0);
-
-                telemetry.addData("This is really center","IT IS MIDDLE");
-                telemetry.update();
-                sleep(2000);
-                break;
-
-            case UNKNOWN:
-                /** MIDDLE code SOMEWHAT WORKING*/
-                TurnRightNew(TURN_SPEED,22,5);
-                Intake(0.2);
-                Wait500();
-                telemetry.addData("keeping the phones awake","part 3");
-                telemetry.update();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                DriveForward(DRIVE_SPEED,24,5);
-                robot.intakespin.setPower(0);
-                telemetry.addData("keeping the phones awake","part 4");
-                telemetry.update();
-                Intake(-0.6);
-                Wait500();
-                Intake(0);
-                DriveForward(DRIVE_SPEED,26,5);
-                TurnLeftNew(TURN_SPEED,26,5);
-                robot.teamMarker.setPosition(0.6);
-                telemetry.addData("keeping the phones awake","part 5");
-                telemetry.update();
-                DriveForward(DRIVE_SPEED,15,5);
-                robot.teamMarker.setPosition(0.0);
-//                TurnLeftNew(TURN_SPEED,3,5);
-                DriveForward(DRIVE_SPEED,68,5);
-                Intake(0.2);
-                telemetry.addData("keeping the phones awake","part 6");
-                telemetry.update();
-                Wait500();
-                Intake(0);
-                robot.intakespin.setPower(1);
-                Wait();
-                robot.intakespin.setPower(0);
-
-                telemetry.addData("ERROR","GOING MIDDLE");
-                telemetry.update();
-                sleep(2000);
-                break;
-        }
 
 
         telemetry.addData("Path", "Complete");
