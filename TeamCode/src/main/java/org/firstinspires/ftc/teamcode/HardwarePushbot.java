@@ -59,12 +59,12 @@ public class HardwarePushbot
     public DcMotor rightFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightBackDrive = null;
-    public DcMotor liftMotor = null;
-    public DcMotor dropOffMotor = null;
-    public DcMotor intakeFlip = null;
-    public DcMotor extension = null;
-    public CRServo intakespin = null;
-    public Servo teamMarker = null;
+    //public DcMotor liftMotor = null;
+   // public DcMotor dropOffMotor = null;
+   // public DcMotor intakeFlip = null;
+   // public DcMotor extension = null;
+  //  public CRServo intakespin = null;
+ //   public Servo teamMarker = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -89,22 +89,22 @@ public class HardwarePushbot
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
         leftBackDrive = hwMap.get(DcMotor.class, "left_back");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back");
-        liftMotor = hwMap.get (DcMotor.class, "lift_motor");
-        dropOffMotor = hwMap.get(DcMotor.class, "drop_off");
-        intakeFlip = hwMap.get(DcMotor.class, "intake_flip");
-        extension = hwMap.get(DcMotor.class, "extension");
-        intakespin = hwMap.crservo.get("intake");
-        teamMarker = hwMap.servo.get("team_marker");
+       // liftMotor = hwMap.get (DcMotor.class, "lift_motor");
+      //  dropOffMotor = hwMap.get(DcMotor.class, "drop_off");
+       /// intakeFlip = hwMap.get(DcMotor.class, "intake_flip");
+       // extension = hwMap.get(DcMotor.class, "extension");
+        //intakespin = hwMap.crservo.get("intake");
+    //    teamMarker = hwMap.servo.get("team_marker");
 
 
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        liftMotor.setDirection (DcMotor.Direction.FORWARD);
-        dropOffMotor.setDirection(DcMotor.Direction.REVERSE);
-        intakeFlip.setDirection(DcMotor.Direction.FORWARD);
-        extension.setDirection(DcMotor.Direction.FORWARD);
+        //liftMotor.setDirection (DcMotor.Direction.FORWARD);
+      //  dropOffMotor.setDirection(DcMotor.Direction.REVERSE);
+        //intakeFlip.setDirection(DcMotor.Direction.FORWARD);
+        //extension.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Set all motors to zero power
@@ -112,10 +112,10 @@ public class HardwarePushbot
         rightBackDrive.setPower(0);
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);
-        liftMotor.setPower(0);
-        dropOffMotor.setPower(0);
-        intakeFlip.setPower(0);
-        extension.setPower(0);
+       // liftMotor.setPower(0);
+        //dropOffMotor.setPower(0);
+       // intakeFlip.setPower(0);
+        //extension.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -128,10 +128,10 @@ public class HardwarePushbot
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        dropOffMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //dropOffMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //intakeFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
     }
 }
