@@ -79,13 +79,13 @@ public class OdometerTesting extends LinearOpMode {
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.00 ;     // This is < 1.0 if geared UP //0.75 for chassis, x for susan
+    static final double     COUNTS_PER_MOTOR_REV    = 1120;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 0.24;     // This is < 1.0 if geared UP //0.75 for chassis, x for susan
     static final double     LIFT_GEAR_REDUCTION     = 2;
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     NO_WHEEL                = 0.5;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415)*0.6;
     static final double     COUNTS_PER_LIFT_INCH    = (COUNTS_PER_MOTOR_REV * LIFT_GEAR_REDUCTION) / (NO_WHEEL * 3.1415);
     static final double     DRIVE_SPEED             = 0.5 ;
     static final double     TURN_SPEED              = 0.5;
@@ -152,7 +152,7 @@ public class OdometerTesting extends LinearOpMode {
         telemetry.update();
         /**LIFT right below*/
 
-        DriveBackwards(DRIVE_SPEED,3,5);
+        DriveBackwards(DRIVE_SPEED,12,5);
 
 
 
