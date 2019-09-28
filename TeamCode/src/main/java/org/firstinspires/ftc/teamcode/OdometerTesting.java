@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Final Autonomous DEPOT2", group="Pushbot")
+@Autonomous
 
 public class OdometerTesting extends LinearOpMode {
 
@@ -114,19 +114,17 @@ public class OdometerTesting extends LinearOpMode {
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.intakeFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.dropOffMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.intakeFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.dropOffMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.intakeFlip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.dropOffMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.intakeFlip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.dropOffMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder resetwx
         telemetry.addData("Path0", "Starting at %7d :%7d",
@@ -445,39 +443,9 @@ public class OdometerTesting extends LinearOpMode {
      }
      }
      */
-    public void lift (double speed, double liftInches, double timeoutS) {
-        int newLiftTarget;
 
-        if (opModeIsActive()) {
-            newLiftTarget = robot.liftMotor.getCurrentPosition() + (int) (liftInches * COUNTS_PER_INCH);
 
-            robot.liftMotor.setTargetPosition(newLiftTarget);
 
-            robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            robot.liftMotor.setPower(Math.abs(speed));
-
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d", newLiftTarget);
-                telemetry.addData("Path2", "Running at %7d",
-                        robot.liftMotor.getCurrentPosition(),
-                        telemetry.update());
-
-            }
-        }
-    }
-
-    public void Wait ()   {
-        sleep(1000);
-    }
-    public void Wait500 ()   {
-        sleep(500);
-    }
 
 
     public void encoderDrive(double speed,
@@ -543,66 +511,7 @@ public class OdometerTesting extends LinearOpMode {
         }
     }
 
-    public void nonWheelMotors(double speed,
-//                             double IntakeFlipTarget, double DropOffTarget,
-//                             double ExtendTarget,
-                               double LiftTarget,
-                               double timeoutS) {
-//        int newIntakeFlipTarget;
-//        int newDropOffTarget;
-//        int newExtendTarget;
-        int newLiftTarget;
 
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-//            newIntakeFlipTarget = robot.intakeFlip.getCurrentPosition() + (int)(IntakeFlipTarget * COUNTS_PER_INCH);
-//            newDropOffTarget = robot.dropOffMotor.getCurrentPosition() + (int)(DropOffTarget * COUNTS_PER_INCH);
-//            newExtendTarget = robot.extension.getCurrentPosition() + (int)(ExtendTarget * COUNTS_PER_INCH);
-            newLiftTarget = robot.liftMotor.getCurrentPosition() + (int)(LiftTarget * COUNTS_PER_LIFT_INCH);
-//            newLiftInches = robot.liftMotor.getCurrentPosition() + (int)(liftInches * COUNTS_PER_INCH);
-
-//            robot.intakeFlip.setTargetPosition(newIntakeFlipTarget);
-//            robot.dropOffMotor.setTargetPosition(newDropOffTarget);
-//            robot.extension.setTargetPosition(newExtendTarget);
-            robot.liftMotor.setTargetPosition(newLiftTarget);
-//            robot.liftMotor.setTargetPosition(newLiftInches);
-
-            // Turn On RUN_TO_POSITION
-//            robot.intakeFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            robot.dropOffMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            robot.extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-//            robot.intakeFlip.setPower(Math.abs(speed));
-//            robot.dropOffMotor.setPower(Math.abs(speed));
-//            robot.extension.setPower(Math.abs(speed));
-            robot.liftMotor.setPower(Math.abs(speed));
-//            robot.liftMotor.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.liftMotor.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d", newLiftTarget);
-                telemetry.addData("Path2",  "Running at %7d",
-                        robot.liftMotor.getCurrentPosition(),
-                        telemetry.update());
-            }
-            //  sleep(250);   // optional pause after each move
-        }
-    }
     public void DriveBackwards (double speed, double driveInches, double timeoutS) {
         int newLeftBackTarget;
         int newRightBackTarget;
@@ -745,14 +654,9 @@ public class OdometerTesting extends LinearOpMode {
             sleep(250);   // optional pause after each move
         }
     }
-    public void Intake (double power) {
-        robot.intakeFlip.setPower(power);
-    }
-    double IntakeTime (double power, long time) throws InterruptedException {
-        Intake(power);
-        Thread.sleep(time);
-        return 0;
-    }
+
+
+
 }
 
 
