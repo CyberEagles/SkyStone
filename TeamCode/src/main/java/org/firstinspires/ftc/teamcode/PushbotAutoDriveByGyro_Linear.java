@@ -22,8 +22,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
-
-public class GyroTurnTesting {
+@Autonomous
+public class GyroTurnTesting  {
     public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         /* Declare OpMode members. */
@@ -108,15 +108,10 @@ public class GyroTurnTesting {
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
-            gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
-            gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-            gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-            gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
-            gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-            gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
-            gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-            gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
+
+            gyroTurn( TURN_SPEED,   90.0);
+            gyroTurn( TURN_SPEED,   -90.0);
+
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
@@ -249,6 +244,10 @@ public class GyroTurnTesting {
             while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
                 // Update telemetry & Allow time for other processes to run.
                 telemetry.update();
+                robot.leftBackDrive.setPower(TURN_SPEED);
+                robot.leftFrontDrive.setPower(TURN_SPEED);
+                robot.rightBackDrive.setPower(-TURN_SPEED);
+                robot.leftBackDrive.setPower(-TURN_SPEED);
             }
         }
 
