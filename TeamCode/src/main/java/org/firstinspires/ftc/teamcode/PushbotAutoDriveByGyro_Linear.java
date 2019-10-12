@@ -42,9 +42,9 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
         // These constants define the desired driving/control characteristics
         // The can/should be tweaked to suite the specific robot drive train.
         static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
-        static final double     TURN_SPEED              = 1;     // Nominal half speed for better accuracy.
+        static final double     TURN_SPEED              = .5;     // Nominal half speed for better accuracy.
 
-        static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+        static final double     HEADING_THRESHOLD       = 3 ;      // As tight as we can make it with an integer gyro
         static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
         static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
@@ -103,7 +103,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
 //wait for start?
-            gyroTurn( TURN_SPEED,   90.0);
+           gyroTurn( TURN_SPEED,   90.0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
 
@@ -217,10 +217,10 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
                 // Update telemetry & Allow time for other processes to run.
                 telemetry.update();
-                robot.leftFrontDrive.setPower(-1);
-                robot.rightFrontDrive.setPower(1);
-                robot.rightBackDrive.setPower(1);
-                robot.leftBackDrive.setPower(-1);
+                //robot.leftFrontDrive.setPower(-1);
+                //robot.rightFrontDrive.setPower(1);
+                //robot.rightBackDrive.setPower(1);
+                //robot.leftBackDrive.setPower(-1);
             }
             robot.leftFrontDrive.setPower(0);
             robot.rightFrontDrive.setPower(0);
@@ -291,10 +291,10 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             }
 
             // Send desired speeds to motors.
-            robot.leftFrontDrive.setPower(leftSpeed);
-            robot.rightFrontDrive.setPower(rightSpeed);
-            robot.leftBackDrive.setPower(leftSpeed);
-            robot.rightBackDrive.setPower(rightSpeed);
+            robot.leftFrontDrive.setPower(-leftSpeed);
+            robot.rightFrontDrive.setPower(-rightSpeed);
+            robot.leftBackDrive.setPower(-leftSpeed);
+            robot.rightBackDrive.setPower(-rightSpeed);
 
             // Display it for the driver.
             telemetry.addData("Target", "%5.2f", angle);
