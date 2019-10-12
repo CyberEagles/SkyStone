@@ -98,9 +98,9 @@ public class HardwarePushbot
 
 
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         //liftMotor.setDirection (DcMotor.Direction.FORWARD);
       //  dropOffMotor.setDirection(DcMotor.Direction.REVERSE);
         //intakeFlip.setDirection(DcMotor.Direction.FORWARD);

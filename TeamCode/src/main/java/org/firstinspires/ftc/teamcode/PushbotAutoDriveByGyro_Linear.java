@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -23,14 +24,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 @Autonomous
-public class GyroTurnTesting  {
+
     public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         /* Declare OpMode members. */
         HardwarePushbot robot   = new HardwarePushbot();
 
         BNO055IMU imu;
-        ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
+                           // Additional Gyro device
 
         static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
         static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -68,23 +69,19 @@ public class GyroTurnTesting  {
 // and named "imu".
             imu = hardwareMap.get(BNO055IMU.class, "imu");
             imu.initialize(parameters);
-            //robot.init(hardwareMap);
+            robot.init(hardwareMap);
             //gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
 
             // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
             // Send telemetry message to alert driver that we are calibrating;
             telemetry.addData(">", "Calibrating Gyro");    //
             telemetry.update();
 
-            gyro.calibrate();
 
             // make sure the gyro is calibrated before continuing
-            while (!isStopRequested() && gyro.isCalibrating())  {
+              {
                 sleep(50);
                 idle();
             }
@@ -92,25 +89,23 @@ public class GyroTurnTesting  {
             telemetry.addData(">", "Robot Ready.");    //
             telemetry.update();
 
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
             // Wait for the game to start (Display Gyro value), and reset gyro before we move..
             while (!isStarted()) {
-                telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
+                //telemetry.addData(">", "Robot Heading = %d",
                 telemetry.update();
             }
 
-            gyro.resetZAxisIntegrator();
+
 
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
-
+//wait for start?
             gyroTurn( TURN_SPEED,   90.0);
-            gyroTurn( TURN_SPEED,   -90.0);
+            //gyroHold(TURN_SPEED, 90, 2);
+           // gyroTurn( TURN_SPEED,   -90.0);
 
 
             telemetry.addData("Path", "Complete");
@@ -149,22 +144,11 @@ public class GyroTurnTesting  {
             if (opModeIsActive()) {
 
                 // Determine new target position, and pass to motor controller
-                moveCounts = (int)(distance * COUNTS_PER_INCH);
-                newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
-                newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
-                newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
-                newRightBackTarget = robot.rightBackDrive.getCurrentPosition() + moveCounts;
+
 
                 // Set Target and Turn On RUN_TO_POSITION
-                robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
-                robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
-                robot.leftBackDrive.setTargetPosition(newLeftBackTarget);
-                robot.rightBackDrive.setTargetPosition(newRightBackTarget);
 
-                robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
                 // start motion.
                 speed = Range.clip(Math.abs(speed), 0.0, 1.0);
@@ -202,15 +186,7 @@ public class GyroTurnTesting  {
                     robot.rightBackDrive.setPower(rightSpeed);
 
                     // Display drive status for the driver.
-                    telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                    telemetry.addData("Front Target",  "%7d:%7d",      newLeftFrontTarget,  newRightFrontTarget);
-                    telemetry.addData("Back Target",  "%7d:%7d",      newLeftBackTarget,  newRightBackTarget);
-                    telemetry.addData("Front Actual",  "%7d:%7d",      robot.leftFrontDrive.getCurrentPosition(),
-                            robot.rightFrontDrive.getCurrentPosition());
-                    telemetry.addData("Back Actual",  "%7d:%7d",      robot.leftBackDrive.getCurrentPosition(),
-                            robot.rightBackDrive.getCurrentPosition());
-                    telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
-                    telemetry.update();
+
                 }
 
                 // Stop all motion;
@@ -220,10 +196,7 @@ public class GyroTurnTesting  {
                 robot.rightBackDrive.setPower(0);
 
                 // Turn off RUN_TO_POSITION
-                robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             }
         }
 
@@ -244,11 +217,16 @@ public class GyroTurnTesting  {
             while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
                 // Update telemetry & Allow time for other processes to run.
                 telemetry.update();
-                robot.leftBackDrive.setPower(TURN_SPEED);
-                robot.leftFrontDrive.setPower(TURN_SPEED);
-                robot.rightBackDrive.setPower(-TURN_SPEED);
-                robot.leftBackDrive.setPower(-TURN_SPEED);
+                robot.leftFrontDrive.setPower(-1);
+                robot.rightFrontDrive.setPower(1);
+                robot.rightBackDrive.setPower(1);
+                robot.leftBackDrive.setPower(-1);
             }
+            robot.leftFrontDrive.setPower(0);
+            robot.rightFrontDrive.setPower(0);
+            robot.rightBackDrive.setPower(0);
+            robot.leftBackDrive.setPower(0);
+            sleep(5000);
         }
 
         /**
@@ -308,7 +286,7 @@ public class GyroTurnTesting  {
             }
             else {
                 steer = getSteer(error, PCoeff);
-                rightSpeed  = speed * steer;
+                rightSpeed  = -speed * steer;
                 leftSpeed   = -rightSpeed;
             }
 
@@ -335,9 +313,10 @@ public class GyroTurnTesting  {
         public double getError(double targetAngle) {
 
             double robotError;
-
+            Orientation angles;
             // calculate error in -179 to +180 range  (
-            robotError = targetAngle - gyro.getIntegratedZValue();
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            robotError = targetAngle - angles.firstAngle;
             while (robotError > 180)  robotError -= 360;
             while (robotError <= -180) robotError += 360;
             return robotError;
@@ -355,4 +334,4 @@ public class GyroTurnTesting  {
 
     }
 
-}
+
