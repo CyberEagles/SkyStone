@@ -34,19 +34,19 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
                            // Additional Gyro device
 
         static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-        static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+        static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
         static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
         static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                 (WHEEL_DIAMETER_INCHES * 3.1415);
 
         // These constants define the desired driving/control characteristics
         // The can/should be tweaked to suite the specific robot drive train.
-        static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
+        static final double     DRIVE_SPEED             = .5;     // Nominal speed for better accuracy.
         static final double     TURN_SPEED              = .5;     // Nominal half speed for better accuracy.
 
-        static final double     HEADING_THRESHOLD       = 3 ;      // As tight as we can make it with an integer gyro
+        static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
         static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-        static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+        static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
 
 
         @Override
@@ -103,7 +103,8 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
 //wait for start?
-           gyroTurn( TURN_SPEED,   90.0);
+           //gyroTurn( TURN_SPEED,   90.0);
+           gyroDrive(DRIVE_SPEED, 24, 0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
 
@@ -144,7 +145,22 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             if (opModeIsActive()) {
 
                 // Determine new target position, and pass to motor controller
+                moveCounts = (int)(distance * COUNTS_PER_INCH);
+                newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
+//                newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
+//                newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
+//                newRightBackTarget = robot.rightBackDrive.getCurrentPosition() + moveCounts;
 
+                // Set Target and Turn On RUN_TO_POSITION
+                robot.leftBackDrive.setTargetPosition(newLeftBackTarget);
+//                robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+//                robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+//                robot.rightBackDrive.setTargetPosition(newRightBackTarget);
+
+                robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 // Set Target and Turn On RUN_TO_POSITION
 
@@ -152,14 +168,14 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
                 // start motion.
                 speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+                robot.leftBackDrive.setPower(speed);
                 robot.leftFrontDrive.setPower(speed);
                 robot.rightFrontDrive.setPower(speed);
-                robot.leftBackDrive.setPower(speed);
                 robot.rightBackDrive.setPower(speed);
 
                 // keep looping while we are still active, and BOTH motors are running.
-                while (opModeIsActive() &&
-                        (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
+                while (opModeIsActive() && (robot.leftBackDrive.isBusy())){
+           //             (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
 
                     // adjust relative speed based on heading error.
                     error = getError(angle);
@@ -180,19 +196,19 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
                         rightSpeed /= max;
                     }
 
-                    robot.leftFrontDrive.setPower(leftSpeed);
-                    robot.rightFrontDrive.setPower(rightSpeed);
-                    robot.leftBackDrive.setPower(leftSpeed);
-                    robot.rightBackDrive.setPower(rightSpeed);
+                    robot.leftBackDrive.setPower(-leftSpeed);
+                    robot.leftFrontDrive.setPower(-leftSpeed);
+                    robot.rightFrontDrive.setPower(-rightSpeed);
+                    robot.rightBackDrive.setPower(-rightSpeed);
 
                     // Display drive status for the driver.
 
                 }
 
                 // Stop all motion;
+                robot.leftBackDrive.setPower(0);
                 robot.leftFrontDrive.setPower(0);
                 robot.rightFrontDrive.setPower(0);
-                robot.leftBackDrive.setPower(0);
                 robot.rightBackDrive.setPower(0);
 
                 // Turn off RUN_TO_POSITION
