@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
         // These constants define the desired driving/control characteristics
         // The can/should be tweaked to suite the specific robot drive train.
-        static final double     DRIVE_SPEED             = 0.75;     // Nominal speed for better accuracy.
+        static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
         static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
         static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
@@ -185,7 +185,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
                     error = 0;
                     steer = getSteer(error, P_DRIVE_COEFF);
                     telemetry.addData("Current Position", robot.rightFrontDrive.getCurrentPosition());    //
-                    telemetry.addData("Target Position", robot.rightFrontDrive.getTargetPosition());    //
+                    telemetry.addData("Target Position",newRightFrontTarget);    //
                     telemetry.addData("Error", error);
                     telemetry.addData("Speed", speed);
                     telemetry.update();
