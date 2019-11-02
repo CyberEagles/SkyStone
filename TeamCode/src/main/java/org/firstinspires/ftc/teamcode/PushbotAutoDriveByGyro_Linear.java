@@ -41,11 +41,11 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
         // These constants define the desired driving/control characteristics
         // The can/should be tweaked to suite the specific robot drive train.
-        static final double     DRIVE_SPEED             = 0.25;     // Nominal speed for better accuracy.
-        static final double     TURN_SPEED              = 0.25;     // Nominal half speed for better accuracy.
+        static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
+        static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
-        static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
-        static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+        static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+        static final double     P_TURN_COEFF            = 1.0;     // Larger is more responsive, but also less stable
         static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
 
 
@@ -106,8 +106,8 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
 //wait for start?
-            gyroDrive(DRIVE_SPEED, 1, 0);
-            gyroTurn( TURN_SPEED,   90.0);
+            gyroDrive(DRIVE_SPEED, 36, 0);
+     //       gyroTurn( TURN_SPEED,   90.0);
             sleep(5000000);
            //gyroDrive(DRIVE_SPEED, 36, 0);
             //gyroHold(TURN_SPEED, 90, 2);
