@@ -41,8 +41,8 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
         // These constants define the desired driving/control characteristics
         // The can/should be tweaked to suite the specific robot drive train.
-        static final double     DRIVE_SPEED             = 0.1;     // Nominal speed for better accuracy.
-        static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+        static final double     DRIVE_SPEED             = 0.25;     // Nominal speed for better accuracy.
+        static final double     TURN_SPEED              = 0.25;     // Nominal half speed for better accuracy.
 
         static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
         static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
@@ -106,14 +106,16 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
 //wait for start?
-           //gyroTurn( TURN_SPEED,   90.0);
-           gyroDrive(DRIVE_SPEED, 36, 0);
+            gyroDrive(DRIVE_SPEED, 1, 0);
+            gyroTurn( TURN_SPEED,   90.0);
+            sleep(5000000);
+           //gyroDrive(DRIVE_SPEED, 36, 0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
 
 
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
+//            telemetry.addData("Path", "Complete");
+//////            telemetry.update();
         }
 
 
@@ -162,7 +164,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
                 robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 // Set Target and Turn On RUN_TO_POSITION
@@ -182,7 +184,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
            //             (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
 
                     // adjust relative speed based on heading error.
-                    error = 0;
+                    error = 0; //getError(angle);
                     steer = getSteer(error, P_DRIVE_COEFF);
                     telemetry.addData("Current Position", robot.rightFrontDrive.getCurrentPosition());    //
                     telemetry.addData("Target Position",newRightFrontTarget);    //
@@ -240,7 +242,10 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
          *                   If a relative angle is required, add/subtract from current heading.
          */
         public void gyroTurn (  double speed, double angle) {
-
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             // keep looping while we are still active, and not on heading.
             while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
                 // Update telemetry & Allow time for other processes to run.
@@ -255,6 +260,24 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             robot.rightBackDrive.setPower(0);
             robot.leftBackDrive.setPower(0);
             sleep(5000);
+        }
+
+
+    /** public void gyroTurn (  double speed, double angle) {
+
+            // keep looping while we are still active, and not on heading.
+            while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+                // Update telemetry & Allow time for other processes to run.
+                telemetry.update();
+                //robot.leftFrontDrive.setPower(-1);
+                //robot.rightFrontDrive.setPower(1);
+                //robot.rightBackDrive.setPower(1);
+                //robot.leftBackDrive.setPower(-1);
+            }
+            robot.leftFrontDrive.setPower(0);
+            robot.rightFrontDrive.setPower(0);
+            robot.rightBackDrive.setPower(0);
+            robot.leftBackDrive.setPower(0);
         }
 
         /**
@@ -285,18 +308,54 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             robot.leftBackDrive.setPower(0);
             robot.rightBackDrive.setPower(0);
         }
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
+        double leftSpeed;
+        double rightSpeed;
 
-        /**
-         * Perform one cycle of closed loop heading control.
-         *
-         * @param speed     Desired speed of turn.
-         * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
-         *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-         *                  If a relative angle is required, add/subtract from current heading.
-         * @param PCoeff    Proportional Gain coefficient
-         * @return
-         */
-        boolean onHeading(double speed, double angle, double PCoeff) {
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed  = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed  = -speed * steer;
+            leftSpeed   = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        robot.leftFrontDrive.setPower(-leftSpeed);
+        robot.rightFrontDrive.setPower(-rightSpeed);
+        robot.leftBackDrive.setPower(-leftSpeed);
+        robot.rightBackDrive.setPower(-rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+
+
+    /**
+     * Perform one cycle of closed loop heading control.
+     *
+     * @param speed     Desired speed of turn.
+     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
+     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                  If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff    Proportional Gain coefficient
+     * @return
+     */
+        /** boolean onHeading(double speed, double angle, double PCoeff) {
             double   error ;
             double   steer ;
             boolean  onTarget = false ;
