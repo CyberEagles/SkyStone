@@ -107,7 +107,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Put a hold after each turn
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
-        gyroTurn( TURN_SPEED,   45.0);
+        gyroTurn( TURN_SPEED,   20.0);
 //           gyroDrive(DRIVE_SPEED, 36, 0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
