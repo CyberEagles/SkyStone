@@ -44,8 +44,9 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
         static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
         static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
-        static final double     HEADING_THRESHOLD       = 3 ;      // As tight as we can make it with an integer gyro
-        static final double     P_TURN_COEFF            = 1.0;     // Larger is more responsive, but also less stable
+        static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+        static final double     TURN_HEADING_THRESHOLD  = 5 ;      // As tight as we can make it with an integer gyro
+        static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
         static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
 
 
@@ -105,9 +106,11 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
+            //If turning right use the separate function and set the angle to negative
+            //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
-        gyroTurn( TURN_SPEED,   45.0);
+        gyroTurnRight( TURN_SPEED,   -160);
 //           gyroDrive(DRIVE_SPEED, 36, 0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
@@ -240,13 +243,13 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
          *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
          *                   If a relative angle is required, add/subtract from current heading.
          */
-        public void gyroTurn (  double speed, double angle) {
+        public void gyroTurnLeft (  double speed, double angle) {
             robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             // keep looping while we are still active, and not on heading.
-            while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
                 // Update telemetry & Allow time for other processes to run.
                 telemetry.update();
                 telemetry.addData("motors turning on",0);
@@ -261,6 +264,28 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             robot.leftBackDrive.setPower(0);
             sleep(5000);
         }
+
+    public void gyroTurnRight (  double speed, double angle) {
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+            telemetry.addData("motors turning on",0);
+            robot.leftFrontDrive.setPower(TURN_SPEED);
+            robot.rightFrontDrive.setPower(-TURN_SPEED);
+            robot.rightBackDrive.setPower(-TURN_SPEED);
+            robot.leftBackDrive.setPower(TURN_SPEED);
+        }
+        robot.leftFrontDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        sleep(5000);
+    }
 
 
     /** public void gyroTurn (  double speed, double angle) {
@@ -319,6 +344,41 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
         error = getError(angle);
 
         if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed  = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed  = -speed * steer;
+            leftSpeed   = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        robot.leftFrontDrive.setPower(-leftSpeed);
+        robot.rightFrontDrive.setPower(-rightSpeed);
+        robot.leftBackDrive.setPower(-leftSpeed);
+        robot.rightBackDrive.setPower(-rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+    boolean TurnonHeading(double speed, double angle, double PCoeff) {
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= TURN_HEADING_THRESHOLD) {
             steer = 0.0;
             leftSpeed  = 0.0;
             rightSpeed = 0.0;
