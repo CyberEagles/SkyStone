@@ -110,7 +110,11 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
             //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
+<<<<<<< HEAD
         gyroTurnRight( TURN_SPEED,   -160);
+=======
+        gyroTurn( TURN_SPEED,   20.0);
+>>>>>>> 5f50a067a584c8467e1fdd0e600840d162d519ad
 //           gyroDrive(DRIVE_SPEED, 36, 0);
             //gyroHold(TURN_SPEED, 90, 2);
            // gyroTurn( TURN_SPEED,   -90.0);
