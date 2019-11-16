@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -47,16 +48,26 @@ public class DrivingOnlyChassis extends OpMode {
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
-        double drive = -gamepad1.left_stick_y; //gamepad1.left_stick_y;
-        double strafe = gamepad1.right_stick_x; //gamepad1.left_stick_x;
-        double turn = gamepad1.left_stick_x; //gamepad1.right_stick_x;
+        //assuming DOWN and RIGHT are POSITIVE, Y is up/down, X is left/right
+        double drive = -gamepad1.left_stick_y; //-gamepad1.left_stick_y;
+        double strafe = gamepad1.left_stick_x*0.4; //gamepad1.left_stick_x;
+        double turn = gamepad1.right_stick_x; //gamepad1.right_stick_x;
 
 
 //        double driveTurn = -gamepad1.left_stick_y + gamepad1.right_stick_x;
-        leftFrontPower = Range.clip(drive + turn + strafe, -1.0, 1.0);
-        rightFrontPower = Range.clip(drive - turn - strafe, -1.0, 1.0);
-        leftBackPower = Range.clip(-drive + turn - strafe, -1.0, 1.0);
-        rightBackPower = Range.clip(-drive - turn + strafe, -1.0, 1.0);
+        leftFrontPower = Range.clip(drive + turn - strafe, -1.0, 1.0);
+        rightFrontPower = Range.clip(-drive + turn - strafe, -1.0, 1.0);
+        leftBackPower = Range.clip(drive + turn + strafe, -1.0, 1.0);
+        rightBackPower = Range.clip(-drive + turn + strafe, -1.0, 1.0);
+
+        telemetry.addData("LY",drive);
+        telemetry.addData("LX",strafe);
+        telemetry.addData("RX",turn);
+        telemetry.addData("LF",leftFrontPower);
+        telemetry.addData("RF",rightFrontPower);
+        telemetry.addData("LB",leftBackPower);
+        telemetry.addData("RB",rightBackPower);
+        telemetry.update();
 
         if (gamepad1.right_bumper) {
             leftBackPower = leftBackPower /2;
@@ -101,10 +112,8 @@ public class DrivingOnlyChassis extends OpMode {
 //Setting the power of the motor//
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
-
-        telemetry.addData("status", "loop 2");
+        leftBackDrive.setPower(-leftBackPower);
+        rightBackDrive.setPower(-rightBackPower);
     }
 
     //Stop the robot//
