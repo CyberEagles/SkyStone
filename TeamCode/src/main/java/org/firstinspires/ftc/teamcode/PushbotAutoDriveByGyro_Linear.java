@@ -41,7 +41,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -110,8 +110,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
-        gyroTurnRight( TURN_SPEED,   -160);
-//           gyroDrive(DRIVE_SPEED, 36, 0);
+//        gyroTurnLeft( TURN_SPEED,   90);
+           gyroDrive(DRIVE_SPEED, 12, 0);
         //gyroHold(TURN_SPEED, 90, 2);
         // gyroTurn( TURN_SPEED,   -90.0);
         sleep(5000000);
@@ -150,9 +150,12 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            if (distance>=36){distance=distance-10.6;}
+            if (24<=distance) {distance=distance-11.0;}
+            else  {distance=distance-7.0;}
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            moveCounts = (int)((distance) * COUNTS_PER_INCH);
             //newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
             //newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
             newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
@@ -249,7 +252,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !TurnonHeading(speed, angle-20, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
@@ -271,7 +274,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !TurnonHeading(speed, angle+20, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
