@@ -62,9 +62,9 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        craneMotor.setDirection (DcMotor.Direction.REVERSE);
-        rightIntake.setDirection(DcMotor.Direction.FORWARD);
-        leftIntake.setDirection(DcMotor.Direction.REVERSE);
+        craneMotor.setDirection (DcMotor.Direction.FORWARD);
+        rightIntake.setDirection(DcMotor.Direction.REVERSE);
+        leftIntake.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -99,11 +99,11 @@ public class DrivingClampy extends OpMode
         double turn = gamepad1.right_stick_x;
 
 
-        leftFrontPower = Range.clip(drive + turn + strafe, -1.0, 1.0);
-        rightFrontPower = Range.clip(drive - turn - strafe, -1.0, 1.0);
-        leftBackPower = Range.clip(drive + turn - strafe, -1.0, 1.0);
-        rightBackPower = Range.clip(drive - turn + strafe, -1.0, 1.0);
-        cranePower = Range.clip(extend,-0.5,0.5);
+        leftFrontPower = Range.clip(drive + turn + strafe, -0.75, 0.75);
+        rightFrontPower = Range.clip(drive - turn - strafe, -0.75, 0.75);
+        leftBackPower = Range.clip(drive + turn - strafe, -0.75, 0.75);
+        rightBackPower = Range.clip(drive - turn + strafe, -0.8, 0.8);
+        cranePower = Range.clip(extend,-0.8,0.8);
 
 // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
         // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
@@ -116,11 +116,23 @@ public class DrivingClampy extends OpMode
 
 
 // SLOW WHEELS
-        if (gamepad1.right_bumper) {
+        if (gamepad1.b) {
             leftBackPower = leftBackPower /2;
             rightBackPower = rightBackPower /2;
             leftFrontPower = leftFrontPower /2;
             rightFrontPower = rightFrontPower /2;
+        }
+        else {
+            leftBackPower = leftBackPower + 0;
+            rightBackPower = rightBackPower + 0;
+            leftFrontPower = leftFrontPower + 0;
+            rightFrontPower = rightFrontPower + 0;
+        }
+        if (gamepad1.a){
+            leftBackPower = leftBackPower * 1.25;
+            rightBackPower = rightBackPower * 1.25;
+            leftFrontPower = leftFrontPower * 1.25;
+            rightFrontPower = rightFrontPower * 1.25;
         }
         else {
             leftBackPower = leftBackPower + 0;
@@ -180,13 +192,13 @@ public class DrivingClampy extends OpMode
 
 
         //intake spin
-        if (gamepad2.right_trigger>0.1){
-           IntakePower=1.0;
+        if (gamepad1.right_trigger>0.1){
+           IntakePower=0.75;
            rightIntake.setPower(IntakePower);
            leftIntake.setPower(-IntakePower);
         }
-        else if (gamepad2.left_trigger>0.1){
-            IntakePower=-1.0;
+        else if (gamepad1.left_trigger>0.1){
+            IntakePower=-0.75;
             rightIntake.setPower(IntakePower);
             leftIntake.setPower(-IntakePower);
         }
@@ -206,46 +218,37 @@ public class DrivingClampy extends OpMode
             clamp.setPosition(0);
         }
 
-        if (gamepad1.right_bumper){
-            push.setPower(1.0);
-        }
-        else if (gamepad1.left_bumper){
+        if (gamepad2.left_trigger>0.1){
             push.setPower(-1.0);
         }
+        else if (gamepad2.right_trigger>0.1){
+            push.setPower(1.0);
+        }
         else{
-            push.setPower(0);
+            push.setPower(1.0);
         }
 
-        if (gamepad1.right_trigger>0.1){
+        if (gamepad2.dpad_left){
             stoneRotator.setPower(0.5);
         }
-        else if (gamepad1.left_trigger>0.1) {
+        else if (gamepad2.dpad_right) {
             stoneRotator.setPower(-0.5);
         }
         else {
             stoneRotator.setPower(0);
         }
-        if (gamepad2.a){
+        if (gamepad1.y){
             ramp.setPosition(160);
         }
-        else if (gamepad2.b){
-            ramp.setPosition(0);
 
-        }
-        else ramp.setPosition(0);
+        else if (gamepad1.x)ramp.setPosition(0);
 
-        //flipper sorter thingy
-        if (gamepad2.y && !gamepad2.x) {
-            flipperPower = 1.0;
-        }
+        if (gamepad1.dpad_up)skystoneGrabber.setPower(0.5);
 
-        else if (gamepad2.x && !gamepad2.y) {
-            flipperPower = -1.0;
-        }
+        else if (gamepad1.dpad_down)skystoneGrabber.setPower(-0.5);
 
-        else {
-            flipperPower = 0.0;
-        }
+        else skystoneGrabber.setPower(0.5);
+
 
 
 
