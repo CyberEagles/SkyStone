@@ -41,14 +41,14 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 1;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     TURN_HEADING_THRESHOLD  = 5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
-
+double backwardsSpeed = -0.8;
 
     @Override
     public void runOpMode() {
@@ -110,8 +110,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
-        gyroTurnRight( TURN_SPEED,   -160);
-//           gyroDrive(DRIVE_SPEED, 36, 0);
+//        gyroTurnLeft( TURN_SPEED,   90);
+        gyroDriveBackwards(DRIVE_SPEED, 12, 0);
         //gyroHold(TURN_SPEED, 90, 2);
         // gyroTurn( TURN_SPEED,   -90.0);
         sleep(5000000);
@@ -150,9 +150,12 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            if (distance>=36){distance=distance-14.0+11.0;}
+            if (24<=distance) {distance=distance-11.0;}
+            else  {distance=distance-7.0;}
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            moveCounts = (int)((distance) * COUNTS_PER_INCH);
             //newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
             //newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
             newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
@@ -231,7 +234,107 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+    public void gyroDriveBackwards ( double speed,
+                            double distance,
+                            double angle) {
 
+        int     newLeftFrontTarget;
+        int     newRightFrontTarget;
+        int     newLeftBackTarget;
+        int     newRightBackTarget;
+        int     moveCounts;
+        double  max;
+        double  error;
+        double  steer;
+        double  leftSpeed;
+        double  rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            if (distance>=36){distance=distance-14.0+11.0;}
+            if (24<=distance) {distance=distance-11.0;}
+            else  {distance=distance-7.0;}
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int)((distance) * COUNTS_PER_INCH);
+            //newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
+            //newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
+            newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
+//                newRightBackTarget = robot.rightBackDrive.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            // robot.leftBackDrive.setTargetPosition(newLeftBackTarget);
+//                robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            // robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+//                robot.rightBackDrive.setTargetPosition(newRightBackTarget);
+
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            // Set Target and Turn On RUN_TO_POSITION
+
+
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), -1.0, 1.0);
+            robot.leftBackDrive.setPower(speed);
+            robot.leftFrontDrive.setPower(speed);
+            robot.rightFrontDrive.setPower(speed);
+            robot.rightBackDrive.setPower(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() && (-robot.rightFrontDrive.getCurrentPosition()>-newRightFrontTarget)){
+
+                //             (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = 0; //getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+                telemetry.addData("Current Position", robot.rightFrontDrive.getCurrentPosition());    //
+                telemetry.addData("Target Position",newRightFrontTarget);    //
+                telemetry.addData("Error", error);
+                telemetry.addData("Speed", speed);
+                telemetry.update();
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0)
+                {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                robot.leftBackDrive.setPower(leftSpeed);
+                robot.leftFrontDrive.setPower(leftSpeed);
+                robot.rightFrontDrive.setPower(rightSpeed);
+                robot.rightBackDrive.setPower(rightSpeed);
+
+                // Display drive status for the driver.
+
+            }
+
+            // Stop all motion;
+            robot.leftBackDrive.setPower(0);
+            robot.leftFrontDrive.setPower(0);
+            robot.rightFrontDrive.setPower(0);
+            robot.rightBackDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
     /**
      *  Method to spin on central axis to point in a new direction.
      *  Move will stop if either of these conditions occur:
@@ -249,7 +352,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !TurnonHeading(speed, angle-20, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
@@ -271,7 +374,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !TurnonHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !TurnonHeading(speed, angle+20, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
