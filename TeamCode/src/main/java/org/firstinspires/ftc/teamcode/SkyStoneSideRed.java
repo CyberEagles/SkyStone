@@ -3,8 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -21,11 +26,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import java.util.List;
 import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 @Autonomous
 
-public class PlanDRed extends LinearOpMode {
+public class SkyStoneSideRed extends LinearOpMode {
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+
+    private static final String VUFORIA_KEY =
+            "Ac4K6BD/////AAABmQmEfMSCD0j8hOxBFYTS/CQj/pGySibYpkLudGb7MN12FPBJ3Om18kKjOQTFwk8o9C3FEY0LIcBYqcPMMB35sfLHF2uwiF/9ElfONAFain0CysTHKvL/mOpSZZxOqevoexo9iNlxftfciARbiruvu5kYGZroBCho5R6WHzHjbGfEAGWjIsckDKRvQQkKw5p5N21GqH5ium/tN/TO0asmGwz0RTb4Djt+P8FSynFSJnmC3gsq97fUipK802hR2A4SvzgJKEmrgoNnOxKGx7E/AkBKGY/mIrTy7/Trhq/mnK6STtm4Vl9GBfnsOj3KAexo7JdfFNCPEuKrMXs7wHfvnEYRS4Lwwf/kwSISAQvIN+8N";
+
+
+    private VuforiaLocalizer vuforia;
+
+    private TFObjectDetector tfod;
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();
@@ -48,7 +66,7 @@ public class PlanDRed extends LinearOpMode {
     static final double     TURN_HEADING_THRESHOLD  = 5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
-
+    static final double backwardsSpeed = -0.8;
 
     @Override
     public void runOpMode() {
@@ -78,6 +96,26 @@ public class PlanDRed extends LinearOpMode {
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+        }
+
+        /** Wait for the game to begin */
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
 
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
@@ -109,11 +147,48 @@ public class PlanDRed extends LinearOpMode {
         //If turning right use the separate function and set the angle to negative
         //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+//look at the first stone
+                if (lookForSkystone()) {
+                    //grab it
+                    telemetry.addData("Skystone Detected! Position","1");
+                    telemetry.update();
+                    sleep(5000);
+                } else {
+                    //drive to next one
+                    telemetry.addData("Skystone Not Found! Continue to Position","2");
+                    telemetry.update();
+                    sleep(5000);
+                }
 
-        gyroDrive(DRIVE_SPEED, 16, 0);
-        gyroTurnRight(TURN_SPEED,-90);
-        gyroDrive(DRIVE_SPEED,5,0);
+//look again at the next stone
+                if (lookForSkystone()) {
+                    //grab it
+                    telemetry.addData("Skystone Detected! Position","2");
+                    telemetry.update();
+                    sleep(5000);
+                } else {
+                    //drive to the next one and grab it
+                    telemetry.addData("Skystone Not Found! Continue to Position","3");
+                    telemetry.update();
+                    sleep(5000);
+                }
+
+            }
+        }
+
+
+        if (tfod != null) {
+            tfod.shutdown();
+        }
+
+//            gyroDrive(DRIVE_SPEED, 1, 0);
+//        gyroTurnLeft( TURN_SPEED,   90);
+        gyroDriveBackwards (backwardsSpeed, 12, 0);
+        gyroDrive(DRIVE_SPEED,12,0);
         //gyroHold(TURN_SPEED, 90, 2);
+        // gyroTurn( TURN_SPEED,   -90.0);
         sleep(5000000);
 
 //            telemetry.addData("Path", "Complete");
@@ -148,9 +223,14 @@ public class PlanDRed extends LinearOpMode {
         double  leftSpeed;
         double  rightSpeed;
 
+
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            if (distance>=36){distance=distance-10.6;}
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            if (distance>=36){distance=distance-14.0+11.0;}
             if (24<=distance) {distance=distance-11.0;}
             else  {distance=distance-7.0;}
 
@@ -234,7 +314,111 @@ public class PlanDRed extends LinearOpMode {
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+    public void gyroDriveBackwards ( double speed,
+                                     double distance,
+                                     double angle) {
 
+        int     newLeftFrontTarget;
+        int     newRightFrontTarget;
+        int     newLeftBackTarget;
+        int     newRightBackTarget;
+        int     moveCounts;
+        double  max;
+        double  error;
+        double  steer;
+        double  leftSpeed;
+        double  rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+            if (distance>=36){distance=distance-14.0+11.0;}
+            if (24<=distance) {distance=distance-11.0;}
+            else  {distance=distance-7.0;}
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int)((distance) * COUNTS_PER_INCH);
+            //newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
+            //newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + moveCounts;
+            newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + moveCounts;
+//                newRightBackTarget = robot.rightBackDrive.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            // robot.leftBackDrive.setTargetPosition(newLeftBackTarget);
+//                robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            // robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+//                robot.rightBackDrive.setTargetPosition(newRightBackTarget);
+
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            // Set Target and Turn On RUN_TO_POSITION
+
+
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), -1.0, 1.0);
+            robot.leftBackDrive.setPower(speed);
+            robot.leftFrontDrive.setPower(speed);
+            robot.rightFrontDrive.setPower(speed);
+            robot.rightBackDrive.setPower(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() && (-robot.rightFrontDrive.getCurrentPosition()>-newRightFrontTarget)){
+
+                //             (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = 0; //getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+                telemetry.addData("Current Position", robot.rightFrontDrive.getCurrentPosition());    //
+                telemetry.addData("Target Position",newRightFrontTarget);    //
+                telemetry.addData("Error", error);
+                telemetry.addData("Speed", speed);
+                telemetry.update();
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0)
+                {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                robot.leftBackDrive.setPower(leftSpeed);
+                robot.leftFrontDrive.setPower(leftSpeed);
+                robot.rightFrontDrive.setPower(rightSpeed);
+                robot.rightBackDrive.setPower(rightSpeed);
+
+                // Display drive status for the driver.
+
+            }
+
+            // Stop all motion;
+            robot.leftBackDrive.setPower(0);
+            robot.leftFrontDrive.setPower(0);
+            robot.rightFrontDrive.setPower(0);
+            robot.rightBackDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
     /**
      *  Method to spin on central axis to point in a new direction.
      *  Move will stop if either of these conditions occur:
@@ -253,6 +437,10 @@ public class PlanDRed extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !TurnonHeading(speed, angle-20, P_TURN_COEFF)) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
@@ -275,6 +463,10 @@ public class PlanDRed extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !TurnonHeading(speed, angle+20, P_TURN_COEFF)) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
@@ -480,6 +672,60 @@ public class PlanDRed extends LinearOpMode {
      */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+    }
+    private boolean lookForSkystone() {
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                // step through the list of recognitions and display boundary info.
+                int i = 0;
+                boolean foundSkyStone = false;
+                for (Recognition recognition : updatedRecognitions) {
+                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                            recognition.getLeft(), recognition.getTop());
+                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                            recognition.getRight(), recognition.getBottom());
+
+                    if (recognition.getLabel() == "Skystone") {
+                        foundSkyStone = true;
+                    }
+                }
+                telemetry.update();
+                return foundSkyStone;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.6;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
 }

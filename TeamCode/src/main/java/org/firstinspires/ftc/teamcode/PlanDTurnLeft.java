@@ -25,7 +25,7 @@ import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 @Autonomous
 
-public class PlanDBlue extends LinearOpMode {
+public class PlanDTurnLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();
