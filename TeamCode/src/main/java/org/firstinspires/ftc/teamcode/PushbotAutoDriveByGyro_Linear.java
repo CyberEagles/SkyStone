@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -48,7 +49,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     static final double     TURN_HEADING_THRESHOLD  = 5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
-double backwardsSpeed = -0.8;
+    static final double backwardsSpeed = -0.8;
 
     @Override
     public void runOpMode() {
@@ -111,7 +112,8 @@ double backwardsSpeed = -0.8;
 //wait for start?
 //            gyroDrive(DRIVE_SPEED, 1, 0);
 //        gyroTurnLeft( TURN_SPEED,   90);
-        gyroDriveBackwards(DRIVE_SPEED, 12, 0);
+        gyroDriveBackwards (backwardsSpeed, 12, 0);
+        gyroDrive(DRIVE_SPEED,12,0);
         //gyroHold(TURN_SPEED, 90, 2);
         // gyroTurn( TURN_SPEED,   -90.0);
         sleep(5000000);
@@ -148,8 +150,13 @@ double backwardsSpeed = -0.8;
         double  leftSpeed;
         double  rightSpeed;
 
+
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             if (distance>=36){distance=distance-14.0+11.0;}
             if (24<=distance) {distance=distance-11.0;}
             else  {distance=distance-7.0;}
@@ -251,6 +258,10 @@ double backwardsSpeed = -0.8;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
             if (distance>=36){distance=distance-14.0+11.0;}
             if (24<=distance) {distance=distance-11.0;}
             else  {distance=distance-7.0;}
@@ -353,6 +364,10 @@ double backwardsSpeed = -0.8;
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !TurnonHeading(speed, angle-20, P_TURN_COEFF)) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
@@ -375,6 +390,10 @@ double backwardsSpeed = -0.8;
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !TurnonHeading(speed, angle+20, P_TURN_COEFF)) {
+            robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            robot.rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
             telemetry.addData("motors turning on",0);
