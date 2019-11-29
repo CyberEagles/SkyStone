@@ -147,6 +147,9 @@ public class SkyStoneSideRed extends LinearOpMode {
         //If turning right use the separate function and set the angle to negative
         //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
+        gyroDrive(DRIVE_SPEED,17,0);
+        gyroTurnLeft(TURN_SPEED,95);
+        sleep(2000);
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 //look at the first stone
@@ -154,11 +157,24 @@ public class SkyStoneSideRed extends LinearOpMode {
                     //grab it
                     telemetry.addData("Skystone Detected! Position","1");
                     telemetry.update();
-                    sleep(5000);
+                    gyroDriveBackwards(DRIVE_SPEED,10,0);
+                    gyroTurnRight(TURN_SPEED,10);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroDrive(DRIVE_SPEED/2,20,0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED,15,0);
+                    gyroTurnRight(TURN_SPEED,-95);
+                    gyroDrive(DRIVE_SPEED,40,0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    sleep(999999999);
                 } else {
                     //drive to next one
                     telemetry.addData("Skystone Not Found! Continue to Position","2");
                     telemetry.update();
+                    gyroDrive(DRIVE_SPEED,10,0);
                     sleep(5000);
                 }
 
@@ -172,9 +188,10 @@ public class SkyStoneSideRed extends LinearOpMode {
                     //drive to the next one and grab it
                     telemetry.addData("Skystone Not Found! Continue to Position","3");
                     telemetry.update();
+                    gyroDrive(DRIVE_SPEED,10,0);
                     sleep(5000);
                 }
-
+            sleep(999999999);
             }
         }
 
@@ -185,8 +202,8 @@ public class SkyStoneSideRed extends LinearOpMode {
 
 //            gyroDrive(DRIVE_SPEED, 1, 0);
 //        gyroTurnLeft( TURN_SPEED,   90);
-        gyroDriveBackwards (backwardsSpeed, 12, 0);
-        gyroDrive(DRIVE_SPEED,12,0);
+//        gyroDriveBackwards (backwardsSpeed, 12, 0);
+//        gyroDrive(DRIVE_SPEED,12,0);
         //gyroHold(TURN_SPEED, 90, 2);
         // gyroTurn( TURN_SPEED,   -90.0);
         sleep(5000000);
@@ -453,7 +470,7 @@ public class SkyStoneSideRed extends LinearOpMode {
         robot.rightFrontDrive.setPower(0);
         robot.rightBackDrive.setPower(0);
         robot.leftBackDrive.setPower(0);
-        sleep(5000);
+        sleep(500);
     }
 
     public void gyroTurnRight (  double speed, double angle) {
@@ -479,7 +496,7 @@ public class SkyStoneSideRed extends LinearOpMode {
         robot.rightFrontDrive.setPower(0);
         robot.rightBackDrive.setPower(0);
         robot.leftBackDrive.setPower(0);
-        sleep(5000);
+        sleep(500);
     }
 
 

@@ -219,7 +219,7 @@ public class DrivingClampy extends OpMode
         }
 
         if (gamepad2.left_trigger>0.1){
-            push.setPower(-1.0);
+            push.setPower(-2.0);
         }
         else if (gamepad2.right_trigger>0.1){
             push.setPower(1.0);

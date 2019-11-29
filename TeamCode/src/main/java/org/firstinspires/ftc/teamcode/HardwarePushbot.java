@@ -59,6 +59,8 @@ public class HardwarePushbot
     public DcMotor rightFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightBackDrive = null;
+    public DcMotor rightIntake  = null;
+    public DcMotor leftIntake = null;
     //public DcMotor liftMotor = null;
    // public DcMotor dropOffMotor = null;
    // public DcMotor intakeFlip = null;
@@ -89,6 +91,8 @@ public class HardwarePushbot
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
         leftBackDrive = hwMap.get(DcMotor.class, "left_back");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back");
+        rightIntake = hwMap.get(DcMotor.class,"right_intake");
+        leftIntake = hwMap.get(DcMotor.class,"left_intake");
        // liftMotor = hwMap.get (DcMotor.class, "lift_motor");
       //  dropOffMotor = hwMap.get(DcMotor.class, "drop_off");
        /// intakeFlip = hwMap.get(DcMotor.class, "intake_flip");
@@ -101,6 +105,8 @@ public class HardwarePushbot
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightIntake.setDirection(DcMotor.Direction.REVERSE);
+        leftIntake.setDirection(DcMotor.Direction.FORWARD);
         //liftMotor.setDirection (DcMotor.Direction.FORWARD);
       //  dropOffMotor.setDirection(DcMotor.Direction.REVERSE);
         //intakeFlip.setDirection(DcMotor.Direction.FORWARD);
@@ -112,6 +118,8 @@ public class HardwarePushbot
         rightBackDrive.setPower(0);
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);
+        rightIntake.setPower(0);
+        leftIntake.setPower(0);
        // liftMotor.setPower(0);
         //dropOffMotor.setPower(0);
        // intakeFlip.setPower(0);
@@ -127,6 +135,11 @@ public class HardwarePushbot
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         //liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //dropOffMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
