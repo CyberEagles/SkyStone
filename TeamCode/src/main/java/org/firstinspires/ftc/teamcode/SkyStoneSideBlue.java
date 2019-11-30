@@ -63,7 +63,7 @@ public class SkyStoneSideBlue extends LinearOpMode {
     static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     TURN_HEADING_THRESHOLD  = 6 ;      // As tight as we can make it with an integer gyro
+    static final double     TURN_HEADING_THRESHOLD  = 7 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
     static final double backwardsSpeed = -0.8;
@@ -147,7 +147,7 @@ public class SkyStoneSideBlue extends LinearOpMode {
         //If turning right use the separate function and set the angle to negative
         //make turn 20-23 degrees closer to zero in order to actually turn to the desired angle
 //wait for start?
-        gyroDrive(DRIVE_SPEED,17,0);
+        gyroDrive(DRIVE_SPEED,18,0);
         gyroTurnLeft(TURN_SPEED,95);
         sleep(2000);
         if (opModeIsActive()) {
@@ -173,11 +173,12 @@ public class SkyStoneSideBlue extends LinearOpMode {
                     gyroDrive(DRIVE_SPEED, 60, 0);
                     robot.rightIntake.setPower(0.75);
                     robot.leftIntake.setPower(-0.75);
+                    //Adjust this next turn
                     gyroTurnLeft(TURN_SPEED, -40);
                     gyroDrive(DRIVE_SPEED/2, 25, 0);
+                    gyroDriveBackwards(DRIVE_SPEED, 20, 0);
                     robot.rightIntake.setPower(0);
                     robot.leftIntake.setPower(0);
-                    gyroDriveBackwards(DRIVE_SPEED, 20, 0);
                     gyroTurnLeft(TURN_SPEED, 95);
                     gyroDrive(DRIVE_SPEED, 63, 0);
                     robot.rightIntake.setPower(-0.75);
@@ -192,9 +193,9 @@ public class SkyStoneSideBlue extends LinearOpMode {
                     //drive to next one
                     telemetry.addData("Skystone Not Found! Continue to Position","2");
                     telemetry.update();
-                    gyroDrive(DRIVE_SPEED,13,0);
+                    gyroDrive(DRIVE_SPEED,8,0);
                 }
-
+                //If other paths not working disable TensorFlow and use the one above
 //look again at the next stone
                 sleep(3000);
                 if (lookForSkystone()) {
@@ -208,21 +209,22 @@ public class SkyStoneSideBlue extends LinearOpMode {
                     gyroDrive(DRIVE_SPEED/2,20,0);
                     robot.rightIntake.setPower(0);
                     robot.leftIntake.setPower(0);
-                    gyroDriveBackwards(DRIVE_SPEED,13,0);
-                    gyroTurnRight(TURN_SPEED,-95);
-                    gyroDrive(DRIVE_SPEED,55,0);
+                    gyroDriveBackwards(DRIVE_SPEED,15,0);
+                    gyroTurnLeft(TURN_SPEED,95);
+                    gyroDrive(DRIVE_SPEED,60,0);
                     robot.rightIntake.setPower(-0.75);
                     robot.leftIntake.setPower(0.75);
-                    gyroTurnLeft(TURN_SPEED, 95);
-                    gyroDrive(DRIVE_SPEED, 65, 0);
+                    gyroDriveBackwards(DRIVE_SPEED,55,0);
+//                    gyroTurnRight(TURN_SPEED, -95);
+//                    gyroDrive(DRIVE_SPEED, 55, 0);
                     robot.rightIntake.setPower(0.75);
                     robot.leftIntake.setPower(-0.75);
-                    gyroTurnRight(TURN_SPEED, 50);
+                    gyroTurnRight(TURN_SPEED, -40);
                     gyroDrive(DRIVE_SPEED, 25, 0);
                     robot.rightIntake.setPower(0);
                     robot.leftIntake.setPower(0);
                     gyroDriveBackwards(DRIVE_SPEED, 20, 0);
-                    gyroTurnRight(TURN_SPEED, -95);
+                    gyroTurnLeft(TURN_SPEED, 95);
                     gyroDrive(DRIVE_SPEED, 58, 0);
                     robot.rightIntake.setPower(-0.75);
                     robot.leftIntake.setPower(0.75);
