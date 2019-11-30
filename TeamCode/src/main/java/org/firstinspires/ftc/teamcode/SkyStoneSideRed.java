@@ -63,7 +63,7 @@ public class SkyStoneSideRed extends LinearOpMode {
     static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     TURN_HEADING_THRESHOLD  = 5 ;      // As tight as we can make it with an integer gyro
+    static final double     TURN_HEADING_THRESHOLD  = 6 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.75;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
     static final double backwardsSpeed = -0.8;
@@ -153,7 +153,7 @@ public class SkyStoneSideRed extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 //look at the first stone
-                if (lookForSkystone()) {
+                if (lookForSkystone()) {    //Refine intake position
                     //grab it
                     telemetry.addData("Skystone Detected! Position","1");
                     telemetry.update();
@@ -162,42 +162,117 @@ public class SkyStoneSideRed extends LinearOpMode {
                     robot.rightIntake.setPower(0.75);
                     robot.leftIntake.setPower(-0.75);
                     gyroDrive(DRIVE_SPEED/2,20,0);
+                    gyroDriveBackwards(DRIVE_SPEED,13,0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroTurnRight(TURN_SPEED,-95);
+                    gyroDrive(DRIVE_SPEED,45,0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    gyroTurnLeft(TURN_SPEED, 95);
+                    gyroDrive(DRIVE_SPEED, 55, 0);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroTurnRight(TURN_SPEED, 50);
+                    gyroDrive(DRIVE_SPEED, 25, 0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED, 20, 0);
+                    gyroTurnRight(TURN_SPEED, -95);
+                    gyroDrive(DRIVE_SPEED, 48, 0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    sleep(2000);
                     robot.rightIntake.setPower(0);
                     robot.leftIntake.setPower(0);
                     gyroDriveBackwards(DRIVE_SPEED,15,0);
-                    gyroTurnRight(TURN_SPEED,-95);
-                    gyroDrive(DRIVE_SPEED,40,0);
-                    robot.rightIntake.setPower(-0.75);
-                    robot.leftIntake.setPower(0.75);
                     sleep(999999999);
+
                 } else {
                     //drive to next one
                     telemetry.addData("Skystone Not Found! Continue to Position","2");
                     telemetry.update();
-                    gyroDrive(DRIVE_SPEED,10,0);
-                    sleep(5000);
+                    gyroDrive(DRIVE_SPEED,13,0);
                 }
 
 //look again at the next stone
+                sleep(3000);
                 if (lookForSkystone()) {
                     //grab it
                     telemetry.addData("Skystone Detected! Position","2");
                     telemetry.update();
-                    sleep(5000);
+                    gyroDriveBackwards(DRIVE_SPEED,13,0);
+                    gyroTurnRight(TURN_SPEED,10);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroDrive(DRIVE_SPEED/2,20,0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED,13,0);
+                    gyroTurnRight(TURN_SPEED,-95);
+                    gyroDrive(DRIVE_SPEED,55,0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    gyroTurnLeft(TURN_SPEED, 95);
+                    gyroDrive(DRIVE_SPEED, 65, 0);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroTurnRight(TURN_SPEED, 50);
+                    gyroDrive(DRIVE_SPEED, 25, 0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED, 20, 0);
+                    gyroTurnRight(TURN_SPEED, -95);
+                    gyroDrive(DRIVE_SPEED, 58, 0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    sleep(2000);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED,15,0);
+                    sleep(999999999);
+
                 } else {
                     //drive to the next one and grab it
                     telemetry.addData("Skystone Not Found! Continue to Position","3");
                     telemetry.update();
-                    gyroDrive(DRIVE_SPEED,10,0);
-                    sleep(5000);
+                    gyroDriveBackwards(DRIVE_SPEED,8,0);
+                    gyroTurnRight(TURN_SPEED,10);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroDrive(DRIVE_SPEED/2,20,0);
+                    gyroDriveBackwards(DRIVE_SPEED,15,0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroTurnRight(TURN_SPEED,-95);
+                    gyroDrive(DRIVE_SPEED,60,0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    gyroTurnLeft(TURN_SPEED, 95);
+                    gyroDrive(DRIVE_SPEED, 70, 0);
+                    robot.rightIntake.setPower(0.75);
+                    robot.leftIntake.setPower(-0.75);
+                    gyroTurnRight(TURN_SPEED, 50);
+                    gyroDrive(DRIVE_SPEED, 25, 0);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED, 20, 0);
+                    gyroTurnRight(TURN_SPEED, -95);
+                    gyroDrive(DRIVE_SPEED, 63, 0);
+                    robot.rightIntake.setPower(-0.75);
+                    robot.leftIntake.setPower(0.75);
+                    sleep(2000);
+                    robot.rightIntake.setPower(0);
+                    robot.leftIntake.setPower(0);
+                    gyroDriveBackwards(DRIVE_SPEED,15,0);
+                    sleep(999999999);
                 }
             sleep(999999999);
             }
         }
 
 
-        if (tfod != null) {
-            tfod.shutdown();
+
         }
 
 //            gyroDrive(DRIVE_SPEED, 1, 0);
@@ -206,11 +281,11 @@ public class SkyStoneSideRed extends LinearOpMode {
 //        gyroDrive(DRIVE_SPEED,12,0);
         //gyroHold(TURN_SPEED, 90, 2);
         // gyroTurn( TURN_SPEED,   -90.0);
-        sleep(5000000);
+        //sleep(5000000);
 
 //            telemetry.addData("Path", "Complete");
 //////            telemetry.update();
-    }
+
 
 
     /**
@@ -740,7 +815,7 @@ public class SkyStoneSideRed extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.6;
+        tfodParameters.minimumConfidence = 0.4;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
