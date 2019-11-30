@@ -103,7 +103,7 @@ public class DrivingClampy extends OpMode
         rightFrontPower = Range.clip(drive - turn - strafe, -0.75, 0.75);
         leftBackPower = Range.clip(drive + turn - strafe, -0.75, 0.75);
         rightBackPower = Range.clip(drive - turn + strafe, -0.8, 0.8);
-        cranePower = Range.clip(extend,-0.8,0.8);
+        cranePower = Range.clip(extend,-1.0,1.0);
 
 // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
         // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
