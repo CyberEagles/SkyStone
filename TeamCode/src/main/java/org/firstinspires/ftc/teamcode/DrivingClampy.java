@@ -14,26 +14,31 @@ public class DrivingClampy extends OpMode
 {
     //Declare motors and variables//
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
-    private DcMotor rightIntake = null;
-    private DcMotor leftIntake = null;
-    private DcMotor craneMotor = null;
+    private DcMotor leftFrontDrive = null;      //wheels
+    private DcMotor rightFrontDrive = null;     //wheels
+    private DcMotor leftBackDrive = null;       //wheels
+    private DcMotor rightBackDrive = null;      //wheels
+    private DcMotor rightIntake = null;         //intake
+    private DcMotor leftIntake = null;          //intake
+    private DcMotor craneMotor = null;          //lifting stones up (vertical extension)
 
-    private Servo clamp = null;
-    private CRServo push = null;
-    private CRServo stoneRotator = null;
-    private CRServo skystoneGrabber = null;
-    private Servo ramp = null;
-    private Servo intakeDrop = null;
+    private Servo clamp = null;             //grabbing stone when it is inside robot
+    private CRServo push = null;            //pushing the stone closer to the clamping mechanism
+    private CRServo stoneRotator = null;    //once stone is grabbed move outside robot
+    private CRServo skystoneGrabber = null; //auto servo to drag skystone
+  //  private Servo ramp = null;            //lift ramp (old)
+  //  private Servo intakeDrop = null;      //push intake down (old)
+    private Servo foundation = null;        //grab foundation
+
 
     final double INTAKE_SPIN_SPEED = 1.0;
 
     @Override
     public void init() {
         //Declare variables for phone to recognise//
+
+        //names on the config
+
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back");
@@ -46,13 +51,9 @@ public class DrivingClampy extends OpMode
         skystoneGrabber = hardwareMap.crservo.get("skystone");
         push = hardwareMap.crservo.get("push");
         stoneRotator = hardwareMap.crservo.get("stone_rotator");
-        intakeDrop = hardwareMap.servo.get("drop");
-        ramp = hardwareMap.servo.get("ramp");
-
-
-
-
-
+     //   intakeDrop = hardwareMap.servo.get("drop");
+     //   ramp = hardwareMap.servo.get("ramp");
+        foundation = hardwareMap.servo.get("foundation");
 
 
 
@@ -91,13 +92,14 @@ public class DrivingClampy extends OpMode
         double extend = gamepad2.left_stick_y;
         double intakeSpinPower;
         double flipperPower;
-
+    //power variables to be modified and set the motor powers to.
 
 //Drive, turning, and strafe//
         double drive = -gamepad1.left_stick_y;
         double strafe = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
 
+//driveing formula. calculates power to each wheel based on joystick position. don't touch
 
         leftFrontPower = Range.clip(drive + turn + strafe, -0.75, 0.75);
         rightFrontPower = Range.clip(drive - turn - strafe, -0.75, 0.75);
@@ -105,14 +107,6 @@ public class DrivingClampy extends OpMode
         rightBackPower = Range.clip(drive - turn + strafe, -0.8, 0.8);
         cranePower = Range.clip(extend,-1.0,1.0);
 
-// SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
-        // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
-        // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
-        // SUPER FAST DROP OFF TO RECOVER FROM FALL. USE WITH EXTREME CAUTION.
-
-
-
-        //SLOW EXTENSION
 
 
 // SLOW WHEELS
@@ -128,6 +122,9 @@ public class DrivingClampy extends OpMode
             leftFrontPower = leftFrontPower + 0;
             rightFrontPower = rightFrontPower + 0;
         }
+
+        //sprint
+
         if (gamepad1.a){
             leftBackPower = leftBackPower * 1.25;
             rightBackPower = rightBackPower * 1.25;
@@ -237,19 +234,26 @@ public class DrivingClampy extends OpMode
         else {
             stoneRotator.setPower(0);
         }
-        if (gamepad1.y){
-            ramp.setPosition(160);
-        }
-
-        else if (gamepad1.x)ramp.setPosition(0);
+//        if (gamepad1.y){
+//            ramp.setPosition(160);
+//        }
+//
+//        else if (gamepad1.x)ramp.setPosition(0);
 
         if (gamepad1.dpad_up)skystoneGrabber.setPower(0.5);
 
         else if (gamepad1.dpad_down)skystoneGrabber.setPower(-0.5);
 
-        else skystoneGrabber.setPower(0.5);
+        else skystoneGrabber.setPower(0.0);
 
 
+        if (gamepad2.dpad_down) {foundation.setPosition(-0.5);}
+
+        else if (gamepad2.dpad_up) {foundation.setPosition(1);}
+
+        else {
+            foundation.setPosition(0.7);
+        }
 
 
         telemetry.addData("status", "loop 2");
