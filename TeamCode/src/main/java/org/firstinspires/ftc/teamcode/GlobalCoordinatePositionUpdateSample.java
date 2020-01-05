@@ -21,7 +21,7 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
     final double COUNTS_PER_INCH = 307.699557;
 
     //Hardware map names for the encoder wheels. Again, these will change for each robot and need to be updated below
-    String verticalLeftEncoderName = "rf", verticalRightEncoderName = "lf", horizontalEncoderName = "lb";
+    String verticalLeftEncoderName = "right_front", verticalRightEncoderName = "left_front", horizontalEncoderName = "left_back";
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,7 +41,7 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
         such that when the verticalLeft and verticalRight encoders spin forward, they return positive values, and when the
         horizontal encoder travels to the right, it returns positive value
         */
-        verticalLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         verticalRight.setDirection(DcMotorSimple.Direction.REVERSE);
         horizontal.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -61,10 +61,12 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
          * *****************
          */
 
+
         //Create and start GlobalCoordinatePosition thread to constantly update the global coordinate positions\
         OdometryGlobalCoordinatePosition globalPositionUpdate = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         Thread positionThread = new Thread(globalPositionUpdate);
         positionThread.start();
+
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
@@ -72,6 +74,13 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
             telemetry.addData("Y Position", globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH);
             telemetry.addData("Orientation (Degrees)", globalPositionUpdate.returnOrientation());
             telemetry.addData("Thread Active", positionThread.isAlive());
+
+            telemetry.addData("Vertical Left Encoder", verticalLeft.getCurrentPosition());
+            telemetry.addData("Vertical Right Encoder", verticalRight.getCurrentPosition());
+            telemetry.addData("Horizontal Encoder", horizontal.getCurrentPosition());
+
+//VERTICAL LEFT IS FORWARD
+
             telemetry.update();
         }
 

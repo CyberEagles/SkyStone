@@ -23,9 +23,9 @@ public class DrivingClampy extends OpMode
     private DcMotor craneMotor = null;          //lifting stones up (vertical extension)
 
     private Servo clamp = null;             //grabbing stone when it is inside robot
-    private CRServo push = null;            //pushing the stone closer to the clamping mechanism
+  //  private CRServo push = null;            //pushing the stone closer to the clamping mechanism
     private CRServo stoneRotator = null;    //once stone is grabbed move outside robot
-    private CRServo skystoneGrabber = null; //auto servo to drag skystone
+    private Servo skystoneGrabber = null; //auto servo to drag skystone
   //  private Servo ramp = null;            //lift ramp (old)
   //  private Servo intakeDrop = null;      //push intake down (old)
     private Servo foundation = null;        //grab foundation
@@ -48,8 +48,8 @@ public class DrivingClampy extends OpMode
         craneMotor = hardwareMap.get (DcMotor.class, "crane");
 
         clamp = hardwareMap.servo.get("grabber");
-        skystoneGrabber = hardwareMap.crservo.get("skystone");
-        push = hardwareMap.crservo.get("push");
+        skystoneGrabber = hardwareMap.servo.get("skystone");
+     //   push = hardwareMap.crservo.get("push");
         stoneRotator = hardwareMap.crservo.get("stone_rotator");
      //   intakeDrop = hardwareMap.servo.get("drop");
      //   ramp = hardwareMap.servo.get("ramp");
@@ -68,6 +68,10 @@ public class DrivingClampy extends OpMode
         leftIntake.setDirection(DcMotor.Direction.FORWARD);
 
 
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 //Tells drivers that robot is ready//
@@ -214,7 +218,7 @@ public class DrivingClampy extends OpMode
         else {
             clamp.setPosition(0);
         }
-
+/**
         if (gamepad2.left_trigger>0.1){
             push.setPower(-2.0);
         }
@@ -224,7 +228,7 @@ public class DrivingClampy extends OpMode
         else{
             push.setPower(1.0);
         }
-
+*/
         if (gamepad2.dpad_left){
             stoneRotator.setPower(0.5);
         }
@@ -240,11 +244,10 @@ public class DrivingClampy extends OpMode
 //
 //        else if (gamepad1.x)ramp.setPosition(0);
 
-        if (gamepad1.dpad_up)skystoneGrabber.setPower(0.5);
 
-        else if (gamepad1.dpad_down)skystoneGrabber.setPower(-0.5);
+        if (gamepad1.dpad_down)skystoneGrabber.setPosition(0);
 
-        else skystoneGrabber.setPower(0.0);
+        else skystoneGrabber.setPosition(1.0);
 
 
         if (gamepad2.dpad_down) {foundation.setPosition(-0.5);}

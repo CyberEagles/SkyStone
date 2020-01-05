@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
+
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
@@ -29,8 +30,8 @@ public class OdometryCalibration extends LinearOpMode {
     BNO055IMU imu;
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
-    String rfName = "rightFrontDrive", rbName = "rightBackDrive", lfName = "leftFrontDrive", lbName = "leftBackDrive";
-    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
+    String rfName = "right_front", rbName = "right_back", lfName = "left_front", lbName = "left_back";
+    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
 
     final double PIVOT_SPEED = 0.5;
 
@@ -110,6 +111,12 @@ public class OdometryCalibration extends LinearOpMode {
         double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
         horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(getZAngle());
+
+
+//        verticalLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        verticalRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        horizontal.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         //Write the constants to text files
         ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
