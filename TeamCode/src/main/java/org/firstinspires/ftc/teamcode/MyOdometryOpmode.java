@@ -116,7 +116,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             while (angleDifference <= -180) angleDifference += 360;
 
             if (Math.abs(angleDifference) > 10) {
-                if (angleDifference < 0){
+                if ( angleDifference < 10) {
                     //turn right
                     leftFrontDrive.setPower(robotPower);
                     rightFrontDrive.setPower(-robotPower);
@@ -137,7 +137,7 @@ public class MyOdometryOpmode extends LinearOpMode {
                     telemetry.update();
 
                 }
-                else {
+                else if (angleDifference >180){
                     leftFrontDrive.setPower(-robotPower);
                     rightFrontDrive.setPower(robotPower);
                     leftBackDrive.setPower(-robotPower);
@@ -165,6 +165,8 @@ public class MyOdometryOpmode extends LinearOpMode {
             else {
                 //drive to target
                 telemetry.addData("drive","This is the else loop");
+                telemetry.addData("X Postion Inches", globalPositionUpdate.returnXCoordinate()/COUNTS_PER_INCH);
+                telemetry.addData("Y Position Inches",globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH);
                 telemetry.update();
                 leftFrontDrive.setPower(robotPower);
                 rightFrontDrive.setPower(robotPower);
