@@ -42,20 +42,23 @@ public class MyOdometryOpmode extends LinearOpMode {
         globalPositionUpdate = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         Thread positionThread = new Thread(globalPositionUpdate);
         positionThread.start();
+//        globalPositionUpdate.reverseRightEncoder();
+//        globalPositionUpdate.reverseNormalEncoder();
 
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        verticalLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        verticalRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        horizontal.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
-        globalPositionUpdate.reverseRightEncoder();
-        globalPositionUpdate.reverseNormalEncoder();
+
+        //      globalPositionUpdate.reverseRightEncoder();
+//        globalPositionUpdate.reverseNormalEncoder();
 
 //        globalPositionUpdate.reverseLeftEncoder();
 
-        goToPosition(12,12,0.2,0,5);
+        goToPosition(20,20,0.2,0,5);
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
@@ -66,6 +69,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             telemetry.addData("Vertical left encoder position", verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical right encoder position", verticalRight.getCurrentPosition());
             telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
+
 
             telemetry.addData("Thread Active", positionThread.isAlive());
             telemetry.update();
@@ -116,12 +120,12 @@ public class MyOdometryOpmode extends LinearOpMode {
             while (angleDifference <= -180) angleDifference += 360;
 
             if (Math.abs(angleDifference) > 10) {
-                if ( angleDifference < 10) {
+                if ( angleDifference > 0) {
                     //turn right
                     leftFrontDrive.setPower(robotPower);
-                    rightFrontDrive.setPower(-robotPower);
+                    rightFrontDrive.setPower(robotPower);
                     leftBackDrive.setPower(robotPower);
-                    rightBackDrive.setPower(-robotPower);
+                    rightBackDrive.setPower(robotPower);
 
                     telemetry.addData("Turning right", "now");
                     telemetry.addData("X Position (inches)", globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH);
@@ -137,11 +141,11 @@ public class MyOdometryOpmode extends LinearOpMode {
                     telemetry.update();
 
                 }
-                else if (angleDifference >180){
+                else if (angleDifference< 0) {
                     leftFrontDrive.setPower(-robotPower);
-                    rightFrontDrive.setPower(robotPower);
+                    rightFrontDrive.setPower(-robotPower);
                     leftBackDrive.setPower(-robotPower);
-                    rightBackDrive.setPower(robotPower);
+                    rightBackDrive.setPower(-robotPower);
 
 
                     telemetry.addData("Turning left", "now");
@@ -165,13 +169,15 @@ public class MyOdometryOpmode extends LinearOpMode {
             else {
                 //drive to target
                 telemetry.addData("drive","This is the else loop");
-                telemetry.addData("X Postion Inches", globalPositionUpdate.returnXCoordinate()/COUNTS_PER_INCH);
+                telemetry.addData("X Position Inches", globalPositionUpdate.returnXCoordinate()/COUNTS_PER_INCH);
                 telemetry.addData("Y Position Inches",globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH);
+                telemetry.addData("Distance to X Target", distanceToXTarget/COUNTS_PER_INCH);
+                telemetry.addData("Distance To Y Target", distanceToYTarget/COUNTS_PER_INCH);
                 telemetry.update();
                 leftFrontDrive.setPower(robotPower);
-                rightFrontDrive.setPower(robotPower);
+                rightFrontDrive.setPower(-robotPower);
                 leftBackDrive.setPower(robotPower);
-                rightBackDrive.setPower(robotPower);
+                rightBackDrive.setPower(-robotPower);
             }
 
         }
@@ -179,7 +185,9 @@ public class MyOdometryOpmode extends LinearOpMode {
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
-
+        telemetry.addData("Distance to X Target", distanceToXTarget/COUNTS_PER_INCH);
+        telemetry.addData("Distance To Y Target", distanceToYTarget/COUNTS_PER_INCH);
+        telemetry.update();
 
 
     }
