@@ -10,9 +10,9 @@ public class ParkOnLineTurnLeft extends LinearOpMode {
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,25,0.8,0,2);
-        robot.goToPosition(-15,25,0.8,0,2);
-        
+        robot.goToPosition(0,24,0.8,0,2);
+        robot.goToPosition(-15,24,0.8,0,2);
+
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);
