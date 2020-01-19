@@ -21,6 +21,10 @@ public class OdometerHardware {
     DcMotor verticalLeft, verticalRight, horizontal;
 
     final double COUNTS_PER_INCH = 307.699557;
+    final int FORWARD = 1;
+    final int BACKWARD = 2;
+    final int STRAFELEFT = 3;
+    final int STRAFERIGHT = 4;
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "right_front", rbName = "right_back", lfName = "left_front", lbName = "left_back";
@@ -47,8 +51,10 @@ public class OdometerHardware {
 
 
 
-
     public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError) {
+        goToPosition(targetXPosition, targetYPosition, robotPower, desiredRobotOrientation, allowableDistanceError, FORWARD);
+    }
+    public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError, int direction) {
 
         double distanceToXTarget = targetXPosition*COUNTS_PER_INCH - globalPositionUpdate.returnXCoordinate();
         double distanceToYTarget = targetYPosition*COUNTS_PER_INCH - globalPositionUpdate.returnYCoordinate();
@@ -64,6 +70,9 @@ public class OdometerHardware {
 
 
             double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget));
+            if (direction == BACKWARD) {
+                robotMovementAngle +=180;
+            }
 
             if (robotMovementAngle <0){
                 robotMovementAngle += 360;
@@ -141,11 +150,20 @@ public class OdometerHardware {
                 opMode.telemetry.addData("Distance to X Target", distanceToXTarget/COUNTS_PER_INCH);
                 opMode.telemetry.addData("Distance To Y Target", distanceToYTarget/COUNTS_PER_INCH);
                 opMode.telemetry.update();
-                leftFrontDrive.setPower(robotPower);
-                rightFrontDrive.setPower(-robotPower);
-                leftBackDrive.setPower(robotPower);
-                rightBackDrive.setPower(-robotPower);
+                if (direction == FORWARD) {
+                    leftFrontDrive.setPower(robotPower);
+                    rightFrontDrive.setPower(-robotPower);
+                    leftBackDrive.setPower(robotPower);
+                    rightBackDrive.setPower(-robotPower);
+                }
+                else if (direction == BACKWARD) {
+                    leftFrontDrive.setPower(-robotPower);
+                    rightFrontDrive.setPower(robotPower);
+                    leftBackDrive.setPower(-robotPower);
+                    rightBackDrive.setPower(robotPower);
+                }
             }
+
 
         }
         leftFrontDrive.setPower(0);

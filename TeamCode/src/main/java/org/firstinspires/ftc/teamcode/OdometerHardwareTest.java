@@ -10,7 +10,8 @@ public class OdometerHardwareTest extends LinearOpMode {
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,20,0.8,0,1);
+        robot.goToPosition(0,20,0.8,0,5, robot.FORWARD);
+        robot.goToPosition(0, 0, 0.8, 0, 5, robot.BACKWARD);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);
