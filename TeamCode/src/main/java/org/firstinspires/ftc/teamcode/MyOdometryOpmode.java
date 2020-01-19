@@ -58,7 +58,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
 //        globalPositionUpdate.reverseLeftEncoder();
 
-        goToPosition(20,20,0.2,0,5);
+        goToPosition(10,0,0.8,0,1);
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
@@ -120,6 +120,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             while (angleDifference <= -180) angleDifference += 360;
 
             if (Math.abs(angleDifference) > 10) {
+
                 if ( angleDifference > 0) {
                     //turn right
                     leftFrontDrive.setPower(robotPower);
@@ -164,8 +165,8 @@ public class MyOdometryOpmode extends LinearOpMode {
                     //turn left
                 }
 
-
             }
+
             else {
                 //drive to target
                 telemetry.addData("drive","This is the else loop");
@@ -191,6 +192,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
 
     }
+    // To fix Strafe create second method
 
 
     private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
