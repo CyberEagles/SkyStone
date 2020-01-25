@@ -74,6 +74,10 @@ public class OdometerHardware {
                 robotMovementAngle +=180;
             }
 
+            if (direction == STRAFELEFT) {
+                robotMovementAngle +=90;
+            }
+
             if (robotMovementAngle <0){
                 robotMovementAngle += 360;
             }
@@ -160,6 +164,12 @@ public class OdometerHardware {
                     leftFrontDrive.setPower(-robotPower);
                     rightFrontDrive.setPower(robotPower);
                     leftBackDrive.setPower(-robotPower);
+                    rightBackDrive.setPower(robotPower);
+                }
+                else if (direction == STRAFELEFT) {
+                    leftFrontDrive.setPower(-robotPower);
+                    rightFrontDrive.setPower(-robotPower);
+                    leftBackDrive.setPower(robotPower);
                     rightBackDrive.setPower(robotPower);
                 }
             }
