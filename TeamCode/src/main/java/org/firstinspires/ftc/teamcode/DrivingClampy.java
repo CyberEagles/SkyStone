@@ -15,8 +15,8 @@ public class DrivingClampy extends OpMode
     //Declare motors and variables//
 
 
-    //Motors: 4 wheels, vertical extension, (maybe one for skystone clamp)
-    //Servos: intake clamp, intake rotate, foundation, skystone clamp x2 (or one is motor)
+    //Motors: 4 wheels, vertical extension, part one for skystone clamp
+    //Servos: intake clamp, intake rotate, foundation, skystone clamp (part one is motor)
 
 
     private DcMotor leftFrontDrive = null;      //wheels
@@ -24,11 +24,11 @@ public class DrivingClampy extends OpMode
     private DcMotor leftBackDrive = null;       //wheels
     private DcMotor rightBackDrive = null;      //wheels
     private DcMotor craneMotor = null;          //lifting stones up (vertical extension)
+    private DcMotor skystoneGrabber = null;   //motor to drag skystones in auto, Part 1
 
     private Servo clamp = null;             //grabbing stones
     private Servo claw = null;              //skystone Grabber pinch servo, Part 2
     private CRServo stoneRotator = null;    //once stone is grabbed move outside robot
-    private Servo skystoneGrabber = null;   //servo to drag skystones in auto, Part 1
     private Servo foundation = null;        //grab foundation
 
 
@@ -45,16 +45,16 @@ public class DrivingClampy extends OpMode
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back");
         craneMotor = hardwareMap.get (DcMotor.class, "crane");
+        skystoneGrabber = hardwareMap.get(DcMotor.class,"skystone");
 
-        clamp = hardwareMap.servo.get("grabber");
-        skystoneGrabber = hardwareMap.servo.get("skystone");
+        clamp = hardwareMap.servo.get("clamp");
         stoneRotator = hardwareMap.crservo.get("stone_rotator");
         foundation = hardwareMap.servo.get("foundation");
-
         claw = hardwareMap.servo.get("claw");
 
         //Reset the Encoder
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        skystoneGrabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Set the modes for each motor
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -62,6 +62,7 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        skystoneGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
@@ -106,6 +107,8 @@ public class DrivingClampy extends OpMode
         double leftBackPower;
         double rightBackPower;
         double IntakePower;
+        boolean was_dpad_up     = false;
+        boolean was_dpad_down   = false;
 //        double cranePower;
 
         //power variables to be modified and set the motor powers to.
@@ -192,28 +195,28 @@ public class DrivingClampy extends OpMode
 
 
 
-        if (gamepad2.right_bumper) {
-            clamp.setPosition(180);
-        } else if (gamepad2.left_bumper) {
-            clamp.setPosition(0);
-        } else {
+        if (gamepad2.right_trigger > 0.5) {
+            clamp.setPosition(1);
+        }
+        else {
             clamp.setPosition(0);
         }
 
 
 
-        if (gamepad2.right_stick_x < -0.5) {
-            stoneRotator.setPower(0.5);
-        } else if (gamepad2.right_stick_x > 0.5) {
-            stoneRotator.setPower(-0.5);
-        } else {
-            stoneRotator.setPower(0);
+        if (gamepad2.x) {
+            stoneRotator.setPower(1);
+        } else if (gamepad2.b) {
+            stoneRotator.setPower(-1);
         }
+        else {stoneRotator.setPower(0);}
 
 
-        if (gamepad1.dpad_down) skystoneGrabber.setPosition(0);
+        if (gamepad1.dpad_down) skystoneGrabber.setPower(0.5);
 
-        else skystoneGrabber.setPosition(1.0);
+        else if (gamepad1.dpad_up) skystoneGrabber.setPower(-0.5);
+
+        else skystoneGrabber.setPower(0);
 
 
 
@@ -222,9 +225,9 @@ public class DrivingClampy extends OpMode
             claw.setPosition(1);
         }
         else if (gamepad1.y) {
-            claw.setPosition(-1);
+            claw.setPosition(0);
         }
-        else claw.setPosition(0);
+        else claw.setPosition(0.5);
 
 
 
@@ -241,9 +244,16 @@ public class DrivingClampy extends OpMode
 /**Gamepad 2 Mode switch and extension movement
  */
 
-        if (gamepad2.dpad_left) {
-            ExtensionModeToggleVariable *= -1;
+        if (gamepad2.a) {
+            ExtensionPower = ExtensionPower*0.5;
+        } else {ExtensionPower = 1;
         }
+
+//  DISABLED DUE TO LACK OF TESTING AND TARGET POSITION MOVING WAY TOO MUCH WAY TOO FAST
+
+//        if (gamepad2.dpad_left) {
+//            ExtensionModeToggleVariable *= -1;
+//        }
 
 
         if (ExtensionModeToggleVariable < 0) {
@@ -253,13 +263,13 @@ public class DrivingClampy extends OpMode
             telemetry.addData("Extension variable", ExtensionModeToggleVariable);
             telemetry.update();
 
-            if (gamepad2.dpad_down) {
+            if (gamepad2.dpad_down && !was_dpad_down) {
                 ExtensionTarget -= (ExtensionTarget*ExtensionInches);
                 telemetry.addData("Extension target", ExtensionTarget);
                 telemetry.update();
             }
 
-            if (gamepad2.dpad_up) {
+            if (gamepad2.dpad_up && !was_dpad_up) {
                 ExtensionTarget += (ExtensionTarget*ExtensionInches);
                 telemetry.addData("Extension target", ExtensionTarget);
                 telemetry.update();
@@ -286,6 +296,7 @@ public class DrivingClampy extends OpMode
 
         if (ExtensionModeToggleVariable > 0) {
             craneMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            craneMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             telemetry.addData("Extension Mode", "POWER UP/DOWN");
             telemetry.addData("Move up/down with", "UP/DOWN");
             telemetry.addData("Extension variable", ExtensionModeToggleVariable);
@@ -294,21 +305,28 @@ public class DrivingClampy extends OpMode
 
 
 
-            if (gamepad2.dpad_down) {
+
+
+            if (gamepad2.dpad_up) {
                 craneMotor.setPower(ExtensionPower);
                 telemetry.addData("Moving...","in power mode. POSITIVE");
                 telemetry.update();
             }
 
-            if (gamepad2.dpad_up) {
-                craneMotor.setPower(-ExtensionPower);
+            else if (gamepad2.dpad_down) {
+                craneMotor.setPower(-ExtensionPower*0.5);
                 telemetry.addData("Moving...","in power mode. NEGATIVE");
                 telemetry.update();
             }
 
+            else {
+                craneMotor.setPower(0.1);
+            }
+            craneMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         }
-
+        was_dpad_up     = gamepad1.dpad_up;
+        was_dpad_down   = gamepad1.dpad_down;
 
     }
 

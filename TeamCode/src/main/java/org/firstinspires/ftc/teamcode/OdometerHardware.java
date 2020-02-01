@@ -4,9 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 import org.firstinspires.ftc.teamcode.OdometryGlobalCoordinatePosition;
 
@@ -20,7 +21,8 @@ public class OdometerHardware {
     public ElapsedTime     runtime = new ElapsedTime();
     public OdometerHardware (LinearOpMode opMode){
         this.opMode= opMode;}
-    DcMotor rightFrontDrive, rightBackDrive, leftFrontDrive, leftBackDrive;
+    DcMotor rightFrontDrive, rightBackDrive, leftFrontDrive, leftBackDrive, skystoneGrabber, craneMotor;
+    Servo claw;
     //Odometry Wheels
     DcMotor verticalLeft, verticalRight, horizontal;
 
@@ -34,25 +36,18 @@ public class OdometerHardware {
     String rfName = "right_front", rbName = "right_back", lfName = "left_front", lbName = "left_back";
     String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
 
-    public Servo foundation = null;
-    public Servo skystoneGrabber = null;
-    public CRServo stoneRotator = null;
-    public Servo clamp = null;
-
-
-
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
 
 
 
 
-        //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
+    //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
 
 
 
 
-        //      globalPositionUpdate.reverseRightEncoder();
+    //      globalPositionUpdate.reverseRightEncoder();
 //        globalPositionUpdate.reverseNormalEncoder();
 
 //        globalPositionUpdate.reverseLeftEncoder();
@@ -161,32 +156,35 @@ public class OdometerHardware {
 
             else {
                 //drive to target
-                opMode.telemetry.addData("drive","This is the else loop");
-                opMode.telemetry.addData("X Position Inches", globalPositionUpdate.returnXCoordinate()/COUNTS_PER_INCH);
-                opMode.telemetry.addData("Y Position Inches",globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH);
-                opMode.telemetry.addData("Distance to X Target", distanceToXTarget/COUNTS_PER_INCH);
-                opMode.telemetry.addData("Distance To Y Target", distanceToYTarget/COUNTS_PER_INCH);
+                opMode.telemetry.addData("drive", "This is the else loop");
+                opMode.telemetry.addData("X Position Inches", globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH);
+                opMode.telemetry.addData("Y Position Inches", globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH);
+                opMode.telemetry.addData("Distance to X Target", distanceToXTarget / COUNTS_PER_INCH);
+                opMode.telemetry.addData("Distance To Y Target", distanceToYTarget / COUNTS_PER_INCH);
                 opMode.telemetry.update();
                 if (direction == FORWARD) {
                     leftFrontDrive.setPower(robotPower);
                     rightFrontDrive.setPower(-robotPower);
                     leftBackDrive.setPower(robotPower);
                     rightBackDrive.setPower(-robotPower);
-                }
-                else if (direction == BACKWARD) {
+                } else if (direction == BACKWARD) {
                     leftFrontDrive.setPower(-robotPower);
                     rightFrontDrive.setPower(robotPower);
                     leftBackDrive.setPower(-robotPower);
                     rightBackDrive.setPower(robotPower);
-                }
-                else if (direction == STRAFELEFT) {
-                    leftFrontDrive.setPower(-robotPower*0.75);
-                    rightFrontDrive.setPower(-robotPower*0.75);
-                    leftBackDrive.setPower(robotPower*0.75);
-                    rightBackDrive.setPower(robotPower*0.8);
+                } else if (direction == STRAFELEFT) {
+                    leftFrontDrive.setPower(-robotPower * 0.75);
+                    rightFrontDrive.setPower(-robotPower * 0.75);
+                    leftBackDrive.setPower(robotPower * 0.75);
+                    rightBackDrive.setPower(robotPower * 0.8);
+                } else if (direction == STRAFERIGHT) {
+                    leftFrontDrive.setPower(robotPower * 0.75);
+                    rightFrontDrive.setPower(robotPower * 0.75);
+                    leftBackDrive.setPower(-robotPower * 0.75);
+                    rightBackDrive.setPower(-robotPower * 0.8);
+
                 }
             }
-
 
         }
         leftFrontDrive.setPower(0);
@@ -210,27 +208,27 @@ public class OdometerHardware {
         rightBackDrive = opMode.hardwareMap.dcMotor.get(rbName);
         leftFrontDrive = opMode.hardwareMap.dcMotor.get(lfName);
         leftBackDrive = opMode.hardwareMap.dcMotor.get(lbName);
+        skystoneGrabber = opMode.hardwareMap.dcMotor.get("skystone");
+        craneMotor = opMode.hardwareMap.get (DcMotor.class, "crane");
+
+        claw = opMode.hardwareMap.servo.get("claw");
+
 
         verticalLeft = opMode.hardwareMap.dcMotor.get(vlEncoderName);
         verticalRight = opMode.hardwareMap.dcMotor.get(vrEncoderName);
         horizontal = opMode.hardwareMap.dcMotor.get(hEncoderName);
 
-
-        foundation = opMode.hardwareMap.servo.get("foundation");
-        stoneRotator = opMode.hardwareMap.crservo.get("stone_rotator");
-        skystoneGrabber = opMode.hardwareMap.servo.get("skystone");
-        clamp = opMode.hardwareMap.servo.get("grabber");
-
-
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        craneMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         verticalLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -245,11 +243,13 @@ public class OdometerHardware {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        craneMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        craneMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 
