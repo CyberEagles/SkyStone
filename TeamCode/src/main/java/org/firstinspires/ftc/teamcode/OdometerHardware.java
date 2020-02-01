@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.OdometryGlobalCoordinatePosition;
 
@@ -32,6 +33,13 @@ public class OdometerHardware {
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "right_front", rbName = "right_back", lfName = "left_front", lbName = "left_back";
     String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
+
+    public Servo foundation = null;
+    public Servo skystoneGrabber = null;
+    public CRServo stoneRotator = null;
+    public Servo clamp = null;
+
+
 
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
@@ -206,6 +214,13 @@ public class OdometerHardware {
         verticalLeft = opMode.hardwareMap.dcMotor.get(vlEncoderName);
         verticalRight = opMode.hardwareMap.dcMotor.get(vrEncoderName);
         horizontal = opMode.hardwareMap.dcMotor.get(hEncoderName);
+
+
+        foundation = opMode.hardwareMap.servo.get("foundation");
+        stoneRotator = opMode.hardwareMap.crservo.get("stone_rotator");
+        skystoneGrabber = opMode.hardwareMap.servo.get("skystone");
+        clamp = opMode.hardwareMap.servo.get("grabber");
+
 
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

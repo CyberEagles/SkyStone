@@ -10,7 +10,7 @@ public class ParkOnLineForward extends LinearOpMode {
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,10,0.8,0,2);
+        robot.goToPosition(0,10,0.8,0, 5,2);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);

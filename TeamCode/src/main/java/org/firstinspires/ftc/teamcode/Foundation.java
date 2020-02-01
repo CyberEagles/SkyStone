@@ -2,16 +2,23 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+
 @Autonomous
-public class ParkOnLineTurnLeft extends LinearOpMode {
+public class Foundation extends LinearOpMode {
     OdometerHardware robot   = new OdometerHardware(this);
     @Override
 
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,24,0.8,0, 5, 2);
-        robot.goToPosition(-15,24,0.8,0, 5, 2);
+        robot.foundation.setDirection(Servo.Direction.FORWARD);
+        robot.goToPosition(-12, 0, 0.8, 0, 5, 5, robot.STRAFELEFT);
+        robot.goToPosition(-12, 29, 0.8, 0, 5, robot.BACKWARD);
+        //robot.goToPosition(-18, -29, 0.8, 23, 3, robot.BACKWARD);
+        robot.foundation.setPosition(-10);
+        sleep (500);
+        //robot.goToPosition(-18, -3, 0.8, 0, 3);
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
