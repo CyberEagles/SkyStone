@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 import org.firstinspires.ftc.teamcode.OdometryGlobalCoordinatePosition;
 
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.teamcode.OdometryGlobalCoordinatePosition;
 public class OdometerHardware {
     //Drive motors
     LinearOpMode opMode = null;
+    public ElapsedTime     runtime = new ElapsedTime();
     public OdometerHardware (LinearOpMode opMode){
         this.opMode= opMode;}
     DcMotor rightFrontDrive, rightBackDrive, leftFrontDrive, leftBackDrive;
@@ -51,17 +54,19 @@ public class OdometerHardware {
 
 
 
-    public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError) {
-        goToPosition(targetXPosition, targetYPosition, robotPower, desiredRobotOrientation, allowableDistanceError, FORWARD);
+    public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError, double timeoutS) {
+        goToPosition(targetXPosition, targetYPosition, robotPower, desiredRobotOrientation, allowableDistanceError, timeoutS, FORWARD);
     }
-    public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError, int direction) {
+    public void goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError, double timeoutS, int direction) {
 
         double distanceToXTarget = targetXPosition*COUNTS_PER_INCH - globalPositionUpdate.returnXCoordinate();
         double distanceToYTarget = targetYPosition*COUNTS_PER_INCH - globalPositionUpdate.returnYCoordinate();
 
         double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
 
-        while (opMode.opModeIsActive() && distance > allowableDistanceError*COUNTS_PER_INCH) {
+        runtime.reset();
+
+        while (opMode.opModeIsActive() && distance > allowableDistanceError*COUNTS_PER_INCH && (runtime.seconds() < timeoutS)) {
 
             distance = Math.hypot(distanceToXTarget,distanceToYTarget);
 
@@ -167,10 +172,10 @@ public class OdometerHardware {
                     rightBackDrive.setPower(robotPower);
                 }
                 else if (direction == STRAFELEFT) {
-                    leftFrontDrive.setPower(-robotPower);
-                    rightFrontDrive.setPower(-robotPower);
-                    leftBackDrive.setPower(robotPower);
-                    rightBackDrive.setPower(robotPower);
+                    leftFrontDrive.setPower(-robotPower*0.75);
+                    rightFrontDrive.setPower(-robotPower*0.75);
+                    leftBackDrive.setPower(robotPower*0.75);
+                    rightBackDrive.setPower(robotPower*0.8);
                 }
             }
 

@@ -14,20 +14,21 @@ public class DrivingClampy extends OpMode
 {
     //Declare motors and variables//
 
+
+    //Motors: 4 wheels, vertical extension, (maybe one for skystone clamp)
+    //Servos: intake clamp, intake rotate, foundation, skystone clamp x2 (or one is motor)
+
+
     private DcMotor leftFrontDrive = null;      //wheels
     private DcMotor rightFrontDrive = null;     //wheels
     private DcMotor leftBackDrive = null;       //wheels
     private DcMotor rightBackDrive = null;      //wheels
-    private DcMotor rightIntake = null;         //intake
-    private DcMotor leftIntake = null;          //intake
     private DcMotor craneMotor = null;          //lifting stones up (vertical extension)
 
-    private Servo clamp = null;             //grabbing stone when it is inside robot
-  //  private CRServo push = null;            //pushing the stone closer to the clamping mechanism
+    private Servo clamp = null;             //grabbing stones
+    private Servo claw = null;              //skystone Grabber pinch servo, Part 2
     private CRServo stoneRotator = null;    //once stone is grabbed move outside robot
-    private Servo skystoneGrabber = null; //auto servo to drag skystone
-  //  private Servo ramp = null;            //lift ramp (old)
-  //  private Servo intakeDrop = null;      //push intake down (old)
+    private Servo skystoneGrabber = null;   //servo to drag skystones in auto, Part 1
     private Servo foundation = null;        //grab foundation
 
 
@@ -43,17 +44,14 @@ public class DrivingClampy extends OpMode
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back");
-        rightIntake = hardwareMap.get(DcMotor.class,"right_intake");
-        leftIntake = hardwareMap.get(DcMotor.class,"left_intake");
         craneMotor = hardwareMap.get (DcMotor.class, "crane");
 
         clamp = hardwareMap.servo.get("grabber");
         skystoneGrabber = hardwareMap.servo.get("skystone");
-     //   push = hardwareMap.crservo.get("push");
         stoneRotator = hardwareMap.crservo.get("stone_rotator");
-     //   intakeDrop = hardwareMap.servo.get("drop");
-     //   ramp = hardwareMap.servo.get("ramp");
         foundation = hardwareMap.servo.get("foundation");
+
+        claw = hardwareMap.servo.get("claw");
 
         //Reset the Encoder
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -64,9 +62,6 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         craneMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
 
 
 
@@ -76,8 +71,6 @@ public class DrivingClampy extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         craneMotor.setDirection (DcMotor.Direction.FORWARD);
-        rightIntake.setDirection(DcMotor.Direction.REVERSE);
-        leftIntake.setDirection(DcMotor.Direction.FORWARD);
 
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -88,12 +81,12 @@ public class DrivingClampy extends OpMode
 
 
 //Tells drivers that robot is ready//
-        telemetry.addData("status", "Initialized");
+//        telemetry.addData("status", "Initialized");
     }
 
     @Override
     public void start() {
-        telemetry.addData("status", "start");
+//        telemetry.addData("status", "start");
     }
 
 
@@ -107,17 +100,13 @@ public class DrivingClampy extends OpMode
     //Set variables//
     @Override
     public void loop() {
-        telemetry.addData("status", "loop 1");
+//        telemetry.addData("status", "loop 1");
         double leftFrontPower;
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
         double IntakePower;
 //        double cranePower;
-        double extend = gamepad2.left_stick_y;
-        double intakeSpinPower;
-        double flipperPower;
-
 
         //power variables to be modified and set the motor powers to.
 
@@ -133,7 +122,6 @@ public class DrivingClampy extends OpMode
         rightFrontPower = Range.clip(drive - turn - strafe, -0.75, 0.75);
         leftBackPower = Range.clip(drive + turn - strafe, -0.75, 0.75);
         rightBackPower = Range.clip(drive - turn + strafe, -0.8, 0.8);
-        //cranePower = Range.clip(extend, -1.0, 1.0);
 
 
 // SLOW WHEELS
@@ -196,28 +184,13 @@ public class DrivingClampy extends OpMode
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
 
+//        telemetry.addData("LF", leftFrontPower);
+//        telemetry.addData("RF", rightFrontPower);
+//        telemetry.addData("LB",leftBackPower);
+//        telemetry.addData("RB",rightBackPower);
+//        telemetry.update();
 
 
-        //lift motor
-
-
-        //intake flip
-
-
-        //intake spin
-        if (gamepad1.right_trigger > 0.1) {
-            IntakePower = 0.75;
-            rightIntake.setPower(IntakePower);
-            leftIntake.setPower(-IntakePower);
-        } else if (gamepad1.left_trigger > 0.1) {
-            IntakePower = -0.75;
-            rightIntake.setPower(IntakePower);
-            leftIntake.setPower(-IntakePower);
-        } else {
-            IntakePower = 0;
-            rightIntake.setPower(IntakePower);
-            leftIntake.setPower(-IntakePower);
-        }
 
         if (gamepad2.right_bumper) {
             clamp.setPosition(180);
@@ -226,17 +199,9 @@ public class DrivingClampy extends OpMode
         } else {
             clamp.setPosition(0);
         }
-/**
- if (gamepad2.left_trigger>0.1){
- push.setPower(-2.0);
- }
- else if (gamepad2.right_trigger>0.1){
- push.setPower(1.0);
- }
- else{
- push.setPower(1.0);
- }
- */
+
+
+
         if (gamepad2.right_stick_x < -0.5) {
             stoneRotator.setPower(0.5);
         } else if (gamepad2.right_stick_x > 0.5) {
@@ -244,16 +209,25 @@ public class DrivingClampy extends OpMode
         } else {
             stoneRotator.setPower(0);
         }
-//        if (gamepad1.y){
-//            ramp.setPosition(160);
-//        }
-//
-//        else if (gamepad1.x)ramp.setPosition(0);
 
 
         if (gamepad1.dpad_down) skystoneGrabber.setPosition(0);
 
         else skystoneGrabber.setPosition(1.0);
+
+
+
+
+        if (gamepad1.x) {
+            claw.setPosition(1);
+        }
+        else if (gamepad1.y) {
+            claw.setPosition(-1);
+        }
+        else claw.setPosition(0);
+
+
+
 
 
         if (gamepad2.right_stick_y > 0.5) {
@@ -264,7 +238,8 @@ public class DrivingClampy extends OpMode
             foundation.setPosition(0.7);
         }
 
-//Gamepad 2 Mode switch and extension movement
+/**Gamepad 2 Mode switch and extension movement
+ */
 
         if (gamepad2.dpad_left) {
             ExtensionModeToggleVariable *= -1;
@@ -335,7 +310,6 @@ public class DrivingClampy extends OpMode
         }
 
 
-        telemetry.addData("status", "loop 2");
     }
 
     //Stop the robot//
@@ -345,7 +319,6 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
-
     }
 }
 
