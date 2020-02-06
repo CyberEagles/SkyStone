@@ -10,19 +10,19 @@ public class RedStoneGrab extends LinearOpMode {
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,-27,0.5,0,5,5, robot.BACKWARD);
-        robot.turn(0.8, -83, 3, 5);
-        robot.goToPosition(-5, -26, 0.5, 0, 3, 5);
+        robot.goToPosition(0,-26,0.6,0,5,5, robot.BACKWARD);
+        robot.turn(0.5, -75, 3, 5);
+        robot.goToPosition(-3, -26, 0.6, 0, 2, 5);
         robot.skystoneGrabber.setPower(0.5);
         robot.claw.setPosition(1);
         sleep(2000);
         robot.skystoneGrabber.setPower(-0.5);
         sleep(1000);
         robot.skystoneGrabber.setPower(0);
-        robot.goToPosition(-85, -26, 0.5, 0, 5, 5);
+        robot.goToPosition(-82, -26, 0.6, 0, 5, 5);
         robot.skystoneGrabber.setPower(0.5);
         sleep(700);
-        robot.claw.setPosition(0.5);
+        robot.claw.setPosition(0);
         sleep(2000);
         robot.skystoneGrabber.setPower(-0.5);
 
