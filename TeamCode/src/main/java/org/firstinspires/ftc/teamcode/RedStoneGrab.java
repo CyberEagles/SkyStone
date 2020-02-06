@@ -10,18 +10,23 @@ public class RedStoneGrab extends LinearOpMode {
     public void runOpMode () {
         robot.initDriveHardwareMap();
         waitForStart();
-        robot.goToPosition(0,23,0.5,0,0.5,5);
-        robot.turn(0.8, 90, 5, 5);
+        robot.goToPosition(0,-27,0.5,0,5,5, robot.BACKWARD);
+        robot.turn(0.8, -83, 3, 5);
+        robot.goToPosition(-5, -26, 0.5, 0, 3, 5);
         robot.skystoneGrabber.setPower(0.5);
         robot.claw.setPosition(1);
         sleep(2000);
         robot.skystoneGrabber.setPower(-0.5);
-        //strafe away from bridge
+        sleep(1000);
+        robot.skystoneGrabber.setPower(0);
+        robot.goToPosition(-85, -26, 0.5, 0, 5, 5);
+        robot.skystoneGrabber.setPower(0.5);
+        sleep(700);
+        robot.claw.setPosition(0.5);
         sleep(2000);
-        //robot.goToPosition(50,25,0.5,0,0.5,5);
-        //robot.goToPosition(-8,25,0.5,0,0.5,5,robot.BACKWARD);
-        //robot.goToPosition(50,25,0.5,0,0.5,5,robot.FORWARD);
-        //robot.goToPosition(20,25,0.5,0,0.5,5,robot.BACKWARD);
+        robot.skystoneGrabber.setPower(-0.5);
+
+
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);
