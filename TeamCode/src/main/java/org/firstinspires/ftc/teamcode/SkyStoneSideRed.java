@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 @Autonomous
+@Disabled
 
 public class SkyStoneSideRed extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";

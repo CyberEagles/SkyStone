@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 import org.firstinspires.ftc.teamcode.HardwarePushbot;
 @Autonomous
+@Disabled
 
 public class PlanDTurnLeft extends LinearOpMode {
 
@@ -112,7 +114,7 @@ public class PlanDTurnLeft extends LinearOpMode {
 
         gyroDrive(DRIVE_SPEED, 16, 0);
         gyroTurnLeft(TURN_SPEED, 90);
-        gyroDrive(DRIVE_SPEED,5,0);
+        gyroDrive(DRIVE_SPEED,10,0);
         //gyroHold(TURN_SPEED, 90, 2);
         sleep(5000000);
 

@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -35,6 +36,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
  */
 
 @Autonomous(name="Rev_Gyro_test", group="K9bot")
+@Disabled
 public class GyroTesting extends LinearOpMode {
 
     /* Declare OpMode members. */
