@@ -106,11 +106,6 @@ public class DrivingClampy extends OpMode
         double rightFrontPower;
         double leftBackPower;
         double rightBackPower;
-        double IntakePower;
-        boolean was_dpad_up     = false;
-        boolean was_dpad_down   = false;
-//        double cranePower;
-
         //power variables to be modified and set the motor powers to.
 
 //Drive, turning, and strafe//
@@ -153,13 +148,6 @@ public class DrivingClampy extends OpMode
             leftFrontPower = leftFrontPower + 0;
             rightFrontPower = rightFrontPower + 0;
         }
-// SLOW EXTENSION
-       /*if (gamepad2.y) {
-           extendPower = extendPower / 2;
-       }
-       else {
-           extendPower = extendPower + 0;
-       }*/
 
 
         // not locking the wheels while turning
@@ -186,12 +174,6 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-
-//        telemetry.addData("LF", leftFrontPower);
-//        telemetry.addData("RF", rightFrontPower);
-//        telemetry.addData("LB",leftBackPower);
-//        telemetry.addData("RB",rightBackPower);
-//        telemetry.update();
 
 
 
@@ -255,7 +237,7 @@ public class DrivingClampy extends OpMode
 //            ExtensionModeToggleVariable *= -1;
 //        }
 
-
+/**
         if (ExtensionModeToggleVariable < 0) {
 
             telemetry.addData("Extension Mode", "TARGET UP/DOWN");
@@ -290,8 +272,7 @@ public class DrivingClampy extends OpMode
             }
 
         }
-
-
+*/
 
 
         if (ExtensionModeToggleVariable > 0) {
@@ -325,8 +306,6 @@ public class DrivingClampy extends OpMode
             craneMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         }
-        was_dpad_up     = gamepad1.dpad_up;
-        was_dpad_down   = gamepad1.dpad_down;
 
     }
 
@@ -337,6 +316,9 @@ public class DrivingClampy extends OpMode
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
+        stoneRotator.setPower(0);
+        craneMotor.setPower(0);
+        skystoneGrabber.setPower(0);
     }
 }
 
