@@ -21,8 +21,8 @@ public class FoundationGrabBlueSide extends LinearOpMode {
         sleep(2000);
         robot.goToPosition(15,-25,0.8,0,2,5);
         robot.goToPosition(-10,-15,0.8,0,3,5,robot.FORWARD);
-        robot.turn(0.5,-90,10,5);
-        robot.goToPosition(20,-12,0.8,0,3,2,robot.BACKWARD);
+        robot.turn(0.5,-90,3,5);
+        robot.goToPosition(20,-15,0.8,0,3,2,robot.BACKWARD);
         robot.foundation.setPosition(180);
         sleep(1000);
         robot.goToPosition(-32,-25,0.8,0,2,5,robot.BACKWARD);

@@ -39,7 +39,8 @@ public class DoubleStoneGrabRed extends LinearOpMode{
 //Joel's new added fun stuff
             sleep(700);
             robot.skystoneGrabber.setPower(0);
-            robot.goToPosition(-2, -24, 0.8, 0, 5, 5, robot.BACKWARD);
+            robot.goToPosition(-2, -26, 0.8, 0, 5, 5, robot.BACKWARD);
+            robot.turn(0.5, -90, 3, 5);
             robot.skystoneGrabber.setPower(0.5);
             robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             sleep(500);
