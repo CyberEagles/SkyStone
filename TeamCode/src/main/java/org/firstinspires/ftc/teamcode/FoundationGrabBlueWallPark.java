@@ -25,6 +25,7 @@ public class FoundationGrabBlueWallPark extends LinearOpMode {
         robot.goToPosition(20,-12,0.8,0,3,2,robot.BACKWARD);
         robot.foundation.setPosition(180);
         sleep(1000);
+        robot.goToPosition(0,-5,0.8,0,2,5);
         robot.goToPosition(-32,-5,0.8,0,2,5,robot.BACKWARD);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates

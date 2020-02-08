@@ -39,7 +39,7 @@ public class RedStoneGrab extends LinearOpMode {
         robot.skystoneGrabber.setPower(0);
         robot.claw.setPosition(0.5);
         robot.turn(0.5,0,3,5);
-        robot.goToPosition(-82,-32,0.6,0,3,5,robot.BACKWARD);
+        robot.goToPosition(-82,-34,0.6,0,3,5,robot.BACKWARD);
         robot.foundation.setDirection(Servo.Direction.FORWARD);
         robot.foundation.setPosition(0);
         sleep(1000);
