@@ -25,13 +25,7 @@ public class FoundationGrabNoStrafeRedSide extends LinearOpMode {
         robot.goToPosition(-20,-12,0.8,0,3,2,robot.BACKWARD);
         robot.foundation.setPosition(180);
         sleep(1000);
-        robot.goToPosition(0,-12,0.8,0,3,5);
-        robot.turn(0.5,-90,10,5);
-        robot.goToPosition(10,-12,0.8,0,3,5,robot.BACKWARD);
-        robot.turn(0.5,0,5,5);
-        robot.goToPosition(10,-25,0.8,0,2,5,robot.BACKWARD);
-        robot.turn(0.5,-90,5,5);
-        robot.goToPosition(28,-25,0.8,0,2,5,robot.BACKWARD);
+        robot.goToPosition(32,-25,0.8,0,2,5,robot.BACKWARD);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);
