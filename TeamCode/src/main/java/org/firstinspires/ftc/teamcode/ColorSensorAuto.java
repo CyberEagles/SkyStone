@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @Autonomous
-@Disabled
+
 public class ColorSensorAuto extends LinearOpMode {
     //Declare motors and variables//
 
@@ -38,9 +38,9 @@ public class ColorSensorAuto extends LinearOpMode {
 
         waitForStart();
 
-       telemetry.addData("Before color sensor stuff","Hi");
+       telemetry.addData("First part of auto","we line up with stones");
        telemetry.update();
-       sleep(3000);
+       sleep(2000);
 
        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
@@ -52,33 +52,91 @@ public class ColorSensorAuto extends LinearOpMode {
                 (int) (sensorColorLeft.blue() * SCALE_FACTOR),
                 hsvValuesLeft);
 
+//        telemetry.addData("Red",sensorColor.red());
+//        telemetry.addData("Green",sensorColor.green());
+//        telemetry.addData("Blue",sensorColor.blue());
+//        telemetry.addData("alpha",sensorColor.alpha());
+//        telemetry.addData("Hue",hsvValues[0]);
+//        telemetry.update();
 
-        if (LeftIsSkystone()) {
-            telemetry.addData("SKYSTONE IS", "LEFT");
+
+//
+//        if (LeftIsSkystone()) {
+//            telemetry.addData("SKYSTONE IS", "LEFT");
+//            telemetry.update();
+//            sleep(5000);
+//        }
+//
+//        else if (RightIsSkystone()) {
+//            telemetry.addData("SKYSTONE IS", "MIDDLE");
+//            telemetry.update();
+//            sleep(5000);
+//
+//        }
+//
+//        else {
+//            telemetry.addData("SKYSTONE IS", "RIGHT");
+//            telemetry.update();
+//            sleep(5000);
+//        }
+
+//        telemetry.addData("After Skystone", "test");
+//        telemetry.update();
+//        sleep(5000);
+
+        if (SkystoneIsLeft()){
+            telemetry.addData("Skystone Detected!","LEFT");
             telemetry.update();
-            sleep(5000);
+            sleep(4000);
         }
-
-        else if (RightIsSkystone()) {
-            telemetry.addData("SKYSTONE IS", "MIDDLE");
+        else if (SkystoneIsRight()){
+            telemetry.addData("Skystone Detected!","RIGHT");
             telemetry.update();
-            sleep(5000);
-
+            sleep(4000);
         }
-
         else {
-            telemetry.addData("SKYSTONE IS", "RIGHT");
+            telemetry.addData("NO Skystone Detected!","MIDDLE");
             telemetry.update();
-            sleep(5000);
+            sleep(4000);
+
         }
 
-        telemetry.addData("After Skystone", "test");
-        telemetry.update();
-        sleep(5000);
+
 
       }
 
-    public boolean RightIsSkystone() {
+      public boolean SkystoneIsRight() {
+          if ((sensorColorLeft.red() + sensorColorLeft.blue() + sensorColorLeft.green()) - (sensorColor.red() + sensorColor.blue() + sensorColor.green()) > 20) {
+//              telemetry.addData("Right Sensor", "Is A Skystone");
+//              telemetry.update();
+//              sleep(2000);
+              return true;
+          }
+          else {
+//              telemetry.addData("Two sensors are too similar", "Both stones");
+//              telemetry.update();
+//              sleep(2000);
+              return false;
+          }
+      }
+
+    public boolean SkystoneIsLeft() {
+        if ((sensorColor.red() + sensorColor.blue() + sensorColor.green()) - (sensorColorLeft.red() + sensorColorLeft.blue() + sensorColorLeft.green()) > 20) {
+//            telemetry.addData("Left Sensor", "Is A Skystone");
+//            telemetry.update();
+//            sleep(2000);
+            return true;
+        }
+        else {
+//            telemetry.addData("Two sensors are too similar", "Both stones");
+//            telemetry.update();
+//            sleep(2000);
+            return false;
+        }
+    }
+
+
+/**    public boolean RightIsSkystone() {
         if (hsvValues[0] > 70 && hsvValuesLeft[0] < 140) {
             telemetry.addData("Right Sensor", "Hue between 70 and 140. Skystone");
             telemetry.update();
@@ -102,4 +160,5 @@ public class ColorSensorAuto extends LinearOpMode {
                 return false;
             }
         }
+*/
     }
