@@ -84,8 +84,8 @@ public class ColorSensorAuto extends LinearOpMode {
 //        telemetry.update();
 //        sleep(5000);
 
-        if (SkystoneIsLeft()){
-            telemetry.addData("Skystone Detected!","LEFT");
+        if (SkystoneIsMiddle()){
+            telemetry.addData("Skystone Detected!","MIDDLE");
             telemetry.update();
             sleep(4000);
         }
@@ -95,7 +95,7 @@ public class ColorSensorAuto extends LinearOpMode {
             sleep(4000);
         }
         else {
-            telemetry.addData("NO Skystone Detected!","MIDDLE");
+            telemetry.addData("NO Skystone Detected!","LEFT");
             telemetry.update();
             sleep(4000);
 
@@ -120,7 +120,7 @@ public class ColorSensorAuto extends LinearOpMode {
           }
       }
 
-    public boolean SkystoneIsLeft() {
+    public boolean SkystoneIsMiddle() {
         if ((sensorColor.red() + sensorColor.blue() + sensorColor.green()) - (sensorColorLeft.red() + sensorColorLeft.blue() + sensorColorLeft.green()) > 20) {
 //            telemetry.addData("Left Sensor", "Is A Skystone");
 //            telemetry.update();
