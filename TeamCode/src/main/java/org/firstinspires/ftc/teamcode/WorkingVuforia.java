@@ -359,18 +359,22 @@ public class WorkingVuforia extends LinearOpMode {
                 double Y = translation.get(1)/ mmPerInch;
                 double Z = translation.get(2)/ mmPerInch;
 
-
+//before detection
                 if (Y > 3) {
                     telemetry.addData("Y > 3", "RIGHT of screen");
                     telemetry.update();
+                    //
+                    sleep(10000);
                 }
                 else if (Y < -3) {
                     telemetry.addData("X < -3", "LEFT of screen");
                     telemetry.update();
+                    sleep(10000);
                 }
                 else {
                     telemetry.addData("Between 3 and -3", "MIDDLE of screen");
                     telemetry.update();
+                    sleep(10000);
                 }
 
 
