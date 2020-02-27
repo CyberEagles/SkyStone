@@ -58,6 +58,7 @@ public class OdometerHardware {
     final int STRAFELEFT = 3;
     final int STRAFERIGHT = 4;
 
+
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "right_front", rbName = "right_back", lfName = "left_front", lbName = "left_back";
     String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
@@ -325,14 +326,14 @@ public class OdometerHardware {
                 double Z = translation.get(2) / mmPerInch;
 
 //before detection
-                if (Y > 3) {
-                    opMode.telemetry.addData("Y > 3", "RIGHT of screen");
+                if (Y > 0) {
+                    opMode.telemetry.addData("Y > 0", "RIGHT half of screen");
                     opMode.telemetry.update();
                     return 1;
                     //
 
-                } else if (Y < -3) {
-                    opMode.telemetry.addData("X < -3", "LEFT of screen");
+                } else if (Y < 0) {
+                    opMode.telemetry.addData("Y < 0", "LEFT half of screen");
                     opMode.telemetry.update();
                     return 3;
 
