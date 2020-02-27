@@ -212,7 +212,7 @@ public class DrivingClampy extends OpMode
         else if (gamepad1.y) {
             claw.setPosition(0);
         }
-        else claw.setPosition(0.5);
+        else claw.setPosition(0.75);
 
 //
 
