@@ -27,7 +27,7 @@ public class DrivingClampy extends OpMode
     private DcMotor skystoneGrabber = null;   //motor to drag skystones in auto, Part 1
 
     private CRServo clamp = null;             //grabbing stones
-    private Servo claw = null;              //skystone Grabber pinch servo, Part 2
+    private CRServo claw = null;              //skystone Grabber pinch servo, Part 2
     private CRServo stoneRotator = null;    //once stone is grabbed move outside robot
     private Servo foundation = null;        //grab foundation
 
@@ -50,7 +50,7 @@ public class DrivingClampy extends OpMode
         clamp = hardwareMap.crservo.get("clamp");
         stoneRotator = hardwareMap.crservo.get("stone_rotator");
         foundation = hardwareMap.servo.get("foundation");
-        claw = hardwareMap.servo.get("claw");
+        claw = hardwareMap.crservo.get("claw");
 
         //Reset the Encoder
         craneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -207,12 +207,12 @@ public class DrivingClampy extends OpMode
 
 
         if (gamepad1.x) {
-            claw.setPosition(1);
+            claw.setPower(1);
         }
         else if (gamepad1.y) {
-            claw.setPosition(0);
+            claw.setPower(-1);
         }
-        else claw.setPosition(0.75);
+        else claw.setPower(0);
 
 //
 
