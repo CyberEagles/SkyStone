@@ -25,7 +25,7 @@ public class FoundationGrabRedSide extends LinearOpMode {
         robot.goToPosition(-20,-12,0.8,0,3,2,robot.BACKWARD);
         robot.foundation.setPosition(180);
         sleep(1000);
-        robot.goToPosition(32,-25,0.8,0,2,5,robot.BACKWARD);
+        robot.goToPosition(32,-24,0.8,0,2,5,robot.BACKWARD);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);

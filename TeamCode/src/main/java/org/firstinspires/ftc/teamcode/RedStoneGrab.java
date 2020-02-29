@@ -20,8 +20,8 @@ public class RedStoneGrab extends LinearOpMode {
         robot.turn(0.5, -75, 3, 5);
         robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.goToPosition(-3, -26, 0.6, 0, 2, 5);
-        robot.claw.setPosition(1);
-        sleep(2000);
+        robot.claw.setPower(1);
+        sleep(2500);
         robot.skystoneGrabber.setPower(-0.5);
         sleep(1000);
         robot.skystoneGrabber.setPower(0);
@@ -31,13 +31,13 @@ public class RedStoneGrab extends LinearOpMode {
         robot.turn(0.5,-90,3,5);
         robot.skystoneGrabber.setPower(0.5);
         sleep(700);
-        robot.claw.setPosition(0);
-        sleep(1500);
+        robot.claw.setPower(-1);
+        sleep(2000);
+        robot.claw.setPower(0);
         robot.skystoneGrabber.setPower(-0.5);
 //Joel's new added fun stuff
         sleep(700);
         robot.skystoneGrabber.setPower(0);
-        robot.claw.setPosition(0.5);
         robot.turn(0.5,0,3,5);
         robot.goToPosition(-82,-34,0.6,0,3,5,robot.BACKWARD);
         robot.foundation.setDirection(Servo.Direction.FORWARD);
@@ -48,7 +48,7 @@ public class RedStoneGrab extends LinearOpMode {
         robot.goToPosition(-90,-21,0.8,0,3,2,robot.BACKWARD);
         robot.foundation.setPosition(180);
         sleep(500);
-        robot.goToPosition(-35,-23,0.8,0,3,5);
+        robot.goToPosition(-30,-24,0.8,0,3,5);
 
 
 
