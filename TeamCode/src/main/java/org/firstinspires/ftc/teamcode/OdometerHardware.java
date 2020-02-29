@@ -48,7 +48,7 @@ public class OdometerHardware {
     DcMotor verticalLeft, verticalRight, horizontal;
 
     public CRServo clamp = null;             //grabbing stones
-    public Servo claw = null;              //skystone Grabber pinch servo, Part 2
+    public CRServo claw = null;              //skystone Grabber pinch servo, Part 2
     public CRServo stoneRotator = null;    //once stone is grabbed move outside robot
     public Servo foundation = null;
 
@@ -460,7 +460,7 @@ return 0;
         skystoneGrabber = opMode.hardwareMap.dcMotor.get("skystone");
         craneMotor = opMode.hardwareMap.get (DcMotor.class, "crane");
 
-        claw = opMode.hardwareMap.servo.get("claw");
+        claw = opMode.hardwareMap.crservo.get("claw");
         clamp = opMode.hardwareMap.crservo.get("clamp");
         stoneRotator = opMode.hardwareMap.crservo.get("stone_rotator");
         foundation = opMode.hardwareMap.servo.get ("foundation");
