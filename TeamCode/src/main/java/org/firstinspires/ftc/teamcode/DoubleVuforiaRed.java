@@ -19,23 +19,111 @@ public class DoubleVuforiaRed extends LinearOpMode{
             CameraDevice.getInstance().setFlashTorchMode(true);
             waitForStart();
 
-
+            robot.foundation.setPosition(0.8);
             robot.goToPosition(5,-16,0.6,0,2,5,robot.BACKWARD);
             robot.turn(0.5, -80, 3, 5);
             int skystonePosition=robot.checkForSkyStone(3);
             if (skystonePosition == 1){
                 telemetry.addData("Skystone Found!", "Right half of screen");
                 telemetry.update();
+                robot.skystoneGrabber.setPower(0.5);
+                robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                sleep(500);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(12, -25, 0.6, 0, 2, 5, robot.BACKWARD);
+                robot.turn(0.6, -90, 3, 5);
+                robot.claw.setPower(1);
+                sleep(2500);
+                robot.skystoneGrabber.setPower(-0.5);
+                sleep(1000);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-55, -25, 0.8, 0, 2, 5);
+                robot.skystoneGrabber.setPower(0.5);
+                sleep(700);
+                robot.claw.setPower(-1);
+                sleep(2000);
+                robot.claw.setPower(0);
+                robot.skystoneGrabber.setPower(-0.5);
+//Joel's new added fun stuff
+                sleep(700);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-8, -25, 0.8, 0, 2, 5, robot.BACKWARD);
+                robot.turn(0.8, -90, 4, 5);
+                robot.skystoneGrabber.setPower(0.5);
+                robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                sleep(500);
+                robot.skystoneGrabber.setPower(0);
+                robot.claw.setPower(1);
+                sleep(2500);
+                robot.skystoneGrabber.setPower(-0.5);
+                sleep(1000);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-55, -25, 0.8, 0, 2, 5);
+                robot.turn(0.8, -90, 2, 5);
+                robot.skystoneGrabber.setPower(0.5);
+                sleep(700);
+                robot.claw.setPower(-1);
+                sleep(1500);
+                robot.claw.setPower(0);
+                robot.skystoneGrabber.setPower(-0.5);
+//Joel's new added fun stuff
+                sleep(700);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-25, -25, 0.8, 0, 2, 5, robot.BACKWARD);
                 sleep(5000);
             }
             else if (skystonePosition == 3) {
                 telemetry.addData("Skystone Found!", "Left half of screen");
                 telemetry.update();
+                robot.skystoneGrabber.setPower(0.5);
+                robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                sleep(500);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(18, -25, 0.6, 0, 2, 5, robot.BACKWARD);
+                robot.turn(0.6, -90, 3, 5);
+                robot.claw.setPower(1);
+                sleep(2500);
+                robot.skystoneGrabber.setPower(-0.5);
+                sleep(1000);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-55, -25, 0.8, 0, 2, 5);
+                robot.skystoneGrabber.setPower(0.5);
+                sleep(700);
+                robot.claw.setPower(-1);
+                sleep(2000);
+                robot.claw.setPower(0);
+                robot.skystoneGrabber.setPower(-0.5);
+//Joel's new added fun stuff
+                sleep(700);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-2, -25, 0.6, 0, 2, 5, robot.BACKWARD);
+                robot.skystoneGrabber.setPower(0.5);
+                robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                sleep(500);
+                robot.skystoneGrabber.setPower(0);
+                robot.claw.setPower(1);
+                sleep(2500);
+                robot.skystoneGrabber.setPower(-0.5);
+                sleep(1000);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-55, -25, 0.8, 0, 2, 5);
+                robot.turn(0.8, -90, 2, 5);
+                robot.skystoneGrabber.setPower(0.5);
+                sleep(700);
+                robot.claw.setPower(-1);
+                sleep(1500);
+                robot.claw.setPower(0);
+                robot.skystoneGrabber.setPower(-0.5);
+//Joel's new added fun stuff
+                sleep(700);
+                robot.skystoneGrabber.setPower(0);
+                robot.goToPosition(-25, -25, 0.8, 0, 2, 5, robot.BACKWARD);
                 sleep(5000);
             }
             else {
                 telemetry.addData("Skystone Not Found ;(", "going for the third one");
                 telemetry.update();
+                robot.turn(0.8, 180, 3, 5);
                 sleep(5000);
             }
 
