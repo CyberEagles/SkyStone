@@ -116,10 +116,10 @@ public class DrivingClampy extends OpMode
 
 //driving formula. calculates power to each wheel based on joystick position. don't touch
 
-        leftFrontPower = Range.clip(drive + turn + strafe, -0.75, 0.75);
-        rightFrontPower = Range.clip(drive - turn - strafe, -0.75, 0.75);
-        leftBackPower = Range.clip(drive + turn - strafe, -0.75, 0.75);
-        rightBackPower = Range.clip(drive - turn + strafe, -0.8, 0.8);
+        leftFrontPower = Range.clip(drive + turn + strafe, -1, 1);
+        rightFrontPower = Range.clip(drive - turn - strafe, -1, 1);
+        leftBackPower = Range.clip(drive + turn - strafe, -1, 1);
+        rightBackPower = Range.clip(drive - turn + strafe, -1, 1);
 
 
 // SLOW WHEELS
@@ -137,17 +137,17 @@ public class DrivingClampy extends OpMode
 
         //sprint
 
-        if (gamepad1.a) {
-            leftBackPower = leftBackPower * 1.25;
-            rightBackPower = rightBackPower * 1.25;
-            leftFrontPower = leftFrontPower * 1.25;
-            rightFrontPower = rightFrontPower * 1.25;
-        } else {
-            leftBackPower = leftBackPower + 0;
-            rightBackPower = rightBackPower + 0;
-            leftFrontPower = leftFrontPower + 0;
-            rightFrontPower = rightFrontPower + 0;
-        }
+//        if (gamepad1.a) {
+//            leftBackPower = leftBackPower * 1.25;
+//            rightBackPower = rightBackPower * 1.25;
+//            leftFrontPower = leftFrontPower * 1.25;
+//            rightFrontPower = rightFrontPower * 1.25;
+//        } else {
+//            leftBackPower = leftBackPower + 0;
+//            rightBackPower = rightBackPower + 0;
+//            leftFrontPower = leftFrontPower + 0;
+//            rightFrontPower = rightFrontPower + 0;
+//        }
 
 
         // not locking the wheels while turning
