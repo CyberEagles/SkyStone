@@ -13,10 +13,9 @@ public class OdometerHardwareTest extends LinearOpMode {
 
     public void runOpMode () {
         robot.initDriveHardwareMap();
-        robot.initVuforia();
         waitForStart();
 
-        //robot.goToPosition(0, 0, 0.8, 0, 5, robot.BACKWARD);
+        robot.goToPosition(-3, 0, 0.6, 0, 1, 5, robot.STRAFELEFT);
         while(opModeIsActive()){
 
             //Display Global (x, y, theta) coordinates
@@ -28,27 +27,7 @@ public class OdometerHardwareTest extends LinearOpMode {
             telemetry.addData("Vertical right encoder position", robot.verticalRight.getCurrentPosition());
             telemetry.addData("horizontal encoder position", robot.horizontal.getCurrentPosition());
             telemetry.update();
-            int skystonePosition=robot.checkForSkyStone(4);
-            if (skystonePosition==3){
-                telemetry.addData("its on the left", "tada");
-                telemetry.update();
-                sleep(5000);
-            }
-            else if (skystonePosition==1){
-                telemetry.addData("it's on the right","it's tremendous it really is");
-                telemetry.update();
-                sleep(5000);
-            }
-            else if (skystonePosition==2){
-                telemetry.addData("it's in the middle", "what did I tell you");
-                telemetry.update();
-                sleep(5000);
-            }
-            else if (skystonePosition==0){
-                telemetry.addData("missed it","mission failed, we'll get 'em next time");
-                telemetry.update();
-                sleep(5000);
-            }
+
 
 
 

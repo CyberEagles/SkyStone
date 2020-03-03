@@ -14,13 +14,16 @@ public class DoubleVuforiaRed extends LinearOpMode{
         @Override
 
         public void runOpMode () {
+            double currentX;
             robot.initDriveHardwareMap();
             robot.initVuforia();
+            telemetry.addData("Vuforia int", "ready to go");
+            telemetry.update();
             CameraDevice.getInstance().setFlashTorchMode(true);
             waitForStart();
 
             robot.foundation.setPosition(0.8);
-            robot.goToPosition(5,-16,0.6,0,2,5,robot.BACKWARD);
+            robot.goToPosition(5,-16,0.8,0,2,5,robot.BACKWARD);
             robot.turn(0.5, -80, 3, 5);
             int skystonePosition=robot.checkForSkyStone(3);
             if (skystonePosition == 1){
@@ -30,8 +33,10 @@ public class DoubleVuforiaRed extends LinearOpMode{
                 robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 sleep(500);
                 robot.skystoneGrabber.setPower(0);
-                robot.goToPosition(12, -25, 0.6, 0, 2, 5, robot.BACKWARD);
+                robot.goToPosition(12, -25, 0.8, 0, 2, 5, robot.BACKWARD);
                 robot.turn(0.6, -90, 3, 5);
+                currentX = robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH;
+                robot.goToPosition(currentX, -28, 0.6, 0, 1, 5, robot.STRAFELEFT);
                 robot.claw.setPower(1);
                 sleep(2500);
                 robot.skystoneGrabber.setPower(-0.5);
@@ -53,6 +58,8 @@ public class DoubleVuforiaRed extends LinearOpMode{
                 robot.skystoneGrabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 sleep(500);
                 robot.skystoneGrabber.setPower(0);
+                currentX = robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH;
+                robot.goToPosition(currentX, -27, 0.6, 0, 1, 5, robot.STRAFELEFT);
                 robot.claw.setPower(1);
                 sleep(2500);
                 robot.skystoneGrabber.setPower(-0.5);
