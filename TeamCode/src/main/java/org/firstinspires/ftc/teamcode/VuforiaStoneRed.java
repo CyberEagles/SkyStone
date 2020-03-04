@@ -16,6 +16,8 @@ public class VuforiaStoneRed extends LinearOpMode {
         double currentx;
         robot.initDriveHardwareMap();
         robot.initVuforia();
+        telemetry.addData("Vuforia init complete","ready to go");
+        telemetry.update();
         waitForStart();
         robot.foundation.setPosition(0.8);
         robot.goToPosition(5, -16, 0.8, 0, 2, 5, robot.BACKWARD);
