@@ -284,6 +284,8 @@ public class OdometerHardware {
         // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
         // Tap the preview window to receive a fresh image.
         targetsSkyStone.activate();
+        opMode.telemetry.addData("Vuforia", "initialized");
+        opMode.telemetry.update();
     }
 
     public int checkForSkyStone(double timeoutS) {
@@ -572,6 +574,10 @@ return 0;
 
             if (direction == STRAFELEFT) {
                 robotMovementAngle +=90;
+            }
+
+            if (direction == STRAFERIGHT) {
+                robotMovementAngle +=270;
             }
 
             if (robotMovementAngle <0){
