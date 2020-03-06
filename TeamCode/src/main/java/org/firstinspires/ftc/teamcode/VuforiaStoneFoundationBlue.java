@@ -95,11 +95,11 @@ public class VuforiaStoneFoundationBlue extends LinearOpMode {
 //lower stone grabber with stone onto foundation ^
         robot.claw.setPower(-1);
         sleep(1000);
-        robot.claw.setPower(0);
 //let go of skystone while on foundation ^
         robot.skystoneGrabber.setPower(-0.5);
         sleep(700);
         robot.skystoneGrabber.setPower(0);
+        robot.claw.setPower(0);
 //lift skystone grabber back into robot ^
         currentX = robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH;
         robot.goToPosition(currentX,-30,0.8,0,3,5,robot.STRAFERIGHT);
