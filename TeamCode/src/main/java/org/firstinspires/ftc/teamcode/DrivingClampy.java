@@ -152,17 +152,17 @@ public class DrivingClampy extends OpMode
 
         // not locking the wheels while turning
         if (gamepad1.right_stick_x >= 0.1 && gamepad1.left_stick_y <= -0.1) {
-            rightFrontPower = 0.2;
-            rightBackPower = 0.2;
+            rightFrontPower = 0.5;  // was 0.2
+            rightBackPower = 0.5;   // was 0.2
         } else if (gamepad1.right_stick_x <= -0.1 && gamepad1.left_stick_y <= -0.1) {
-            leftFrontPower = 0.2;
-            leftBackPower = 0.2;
+            leftFrontPower = 0.5;   //was 0.2
+            leftBackPower = 0.5;    //was 0.2
         } else if (gamepad1.right_stick_x >= 0.1 && gamepad1.left_stick_y <= -0.1) {
-            leftFrontPower = -0.3;
-            leftBackPower = -0.3;
+            leftFrontPower = -0.5;  //was -0.3
+            leftBackPower = -0.5;   //was -0.3
         } else if (gamepad1.right_stick_x <= -0.1 && gamepad1.left_stick_y <= -0.1) {
-            rightFrontPower = -0.3;
-            rightBackPower = -0.3;
+            rightFrontPower = -0.5; //was -0.3
+            rightBackPower = -0.5;  //was -0.3
         } else {
             rightFrontPower = rightFrontPower;
             rightBackPower = rightBackPower;

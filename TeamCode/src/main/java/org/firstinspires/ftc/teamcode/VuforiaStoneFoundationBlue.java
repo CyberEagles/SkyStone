@@ -105,7 +105,7 @@ public class VuforiaStoneFoundationBlue extends LinearOpMode {
         robot.goToPosition(currentX,-30,0.8,0,3,5,robot.STRAFERIGHT);
         robot.turn(0.8,0,4,5);
         currentX = robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH;
-        robot.goToPosition(currentX,-38,0.6,0,2,5,robot.BACKWARD);
+        robot.goToPosition(currentX,-38,0.6,0,4,5,robot.BACKWARD);
 //rotate and drive into foundation more ^
         robot.foundation.setDirection(Servo.Direction.FORWARD);
         robot.foundation.setPosition(0);
@@ -119,7 +119,7 @@ public class VuforiaStoneFoundationBlue extends LinearOpMode {
         robot.foundation.setPosition(180);
         robot.goToPosition(90,-17,1,0,6,1.0,robot.BACKWARD);
 //Drag foundation, rotate it, and push it into corner. then let go ^
-        robot.goToPosition(35,-27,1,0,2,5);
+        robot.goToPosition(35,-27,1,0,4,5);
         sleep(5000);
 //Park on the line^
 //
