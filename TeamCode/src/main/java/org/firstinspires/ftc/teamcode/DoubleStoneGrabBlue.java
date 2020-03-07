@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @Autonomous
+@Disabled
 public class DoubleStoneGrabBlue extends LinearOpMode{
 
     OdometerHardware robot   = new OdometerHardware(this);

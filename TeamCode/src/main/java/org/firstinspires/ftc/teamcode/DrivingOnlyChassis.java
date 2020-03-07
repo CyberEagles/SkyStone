@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp
-
+@Disabled
 
 public class DrivingOnlyChassis extends OpMode {
     //Declare motors and variables//

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @Autonomous
-
+@Disabled
 public class ColourSensorExperiment extends LinearOpMode {
     //Declare motors and variables//
 
