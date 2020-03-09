@@ -26,7 +26,7 @@ public class FoundationGrabRedWallPark extends LinearOpMode {
         robot.foundation.setPosition(180);
         sleep(1000);
         robot.goToPosition(0,-5,0.8,0,2,5);
-        robot.goToPosition(32,-5,0.8,0,2,5);
+        robot.goToPosition(32,-2,0.8,0,2,5);
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", robot.globalPositionUpdate.returnXCoordinate() / robot.COUNTS_PER_INCH);
